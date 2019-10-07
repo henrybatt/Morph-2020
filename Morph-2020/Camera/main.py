@@ -1,10 +1,13 @@
 # Untitled - By: Henry - Mon Oct 7 2019
 
+##### MUST MAKE CFASTER
+
+
 ATTACK_YELLOW = True
 ROBOT = 1   # 1=A, 0=B
 
 DEBUG_WHITEBAL = False
-DEBUGGING = True
+DEBUGGING = False
 
 
 ## ======================= BLOB Finder =======================
