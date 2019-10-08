@@ -23,6 +23,4 @@ void setup() {
 void loop() {
     Cam.update();
 
-    Cam.newData();
-
 }

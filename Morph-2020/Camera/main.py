@@ -149,7 +149,7 @@ class Send():
 
     def sendData(self, data):
 
-        print(', '.join(map(str, data)))
+        #print(', '.join(map(str, data)))
 
         # - Data to write - #
         # Starting byte

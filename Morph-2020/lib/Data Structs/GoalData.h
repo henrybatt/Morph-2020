@@ -18,7 +18,7 @@ class GoalData{
         GoalData(uint16_t angle, uint16_t distance) : angle(angle), distance(distance) {}
 
         bool visible(){
-            return angle != 65535;
+            return angle != 65535 || angle != -1;
         }
 
         int calculateCentimeter(){

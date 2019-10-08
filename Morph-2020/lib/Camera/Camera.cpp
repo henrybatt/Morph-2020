@@ -42,6 +42,7 @@ void Camera::update(){
         Serial.print(", Defend visible: ");
         Serial.println(defend.visible);
     #endif
+
 }
 
 
@@ -51,7 +52,7 @@ void Camera::goalTrack(){
 }
 
 
-double Camera::closestDistance(){
+int Camera::closestDistance(){
     if(attack.visible()|| defend.visible()){
         if(!attack.visible()){
             return defend.distance;

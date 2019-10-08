@@ -27,7 +27,7 @@ class Camera{
         void goalTrack();
 
         /* -- Find closest goal in pixels -- */
-        double closestDistance();
+        int closestDistance();
 
         /* -- Find closest goal in centimeters -- */
         double closestCentimeter();
