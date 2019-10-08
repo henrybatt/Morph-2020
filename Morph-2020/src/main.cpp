@@ -1,9 +1,28 @@
 #include <Arduino.h>
+#include <Define.h>
+#include <Common.h>
+
+
+#include <Camera.h>
+
+
+
+
+Camera Cam;
+
 
 void setup() {
-  // put your setup code here, to run once:
+
+
+    Cam.init();
+
+
+
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+    Cam.update();
+
+    Cam.newData();
+
 }

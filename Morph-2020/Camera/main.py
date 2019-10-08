@@ -17,7 +17,7 @@ from math import atan2, sqrt, degrees
 class Find():
 
     def __init__(self):
-        self.NO_DATA = 250
+        self.NO_DATA = -1
         self.debugCount = 0
         self.DEBUG_COUNT_MAX = 30
 
@@ -32,9 +32,9 @@ class Find():
         # - Camera Specific Values - #
         if robot:
             self.thresholds = [
-            [(0, 0, 0, 0, 0, 0)],   #Yellow Goal
-            [(0, 0, 0, 0, 0, 0)]]   #Blue Goal
-            self.whitebal = (-6.02073, -5.886325, -1.476391)
+            (14, 59, 36, 83, 15, 68),   #Yellow Goal
+            (11, 50, -60, -11, -7, 34)]   #Blue Goal
+            self.whitebal = (-6.02073, -4.878651, -0.06828868)
             self.window = (20, 0, 120, 120)
             self.MAX_RAD = 70
             self.CENTREX = 60
@@ -65,8 +65,8 @@ class Find():
             sensor.set_contrast(3)
             sensor.set_saturation(2)
 
-            sensor.set_auto_exposure(False, exposure_us=sensor.get_exposure_us())#10000)
-            sensor.set_auto_gain(False, gain_db=sensor.get_gain_db())#15)
+            sensor.set_auto_exposure(False, exposure_us=10000)#sensor.get_exposure_us())
+            sensor.set_auto_gain(False, gain_db=15)#sensor.get_gain_db())
             sensor.skip_frames(time=500)
 
 
@@ -83,7 +83,7 @@ class Find():
         y = object.cy() - (self.CENTREY)
         angle = (450 - degrees(atan2(y, x))) % 360
         distance = (sqrt(x**2 + y**2))
-        return angle, distance
+        return int(angle), int(distance)
 
 
     def whiteBal(self):
@@ -101,8 +101,9 @@ class Find():
                     if (self.debug):
                         self.img.draw_cross(blob.cx(), blob.cy())
                         self.img.draw_rectangle(blob.rect())
-                    return(angle, distance, True)
-        return(self.NO_DATA, self.NO_DATA, False)
+                        self.img.draw_line((self.CENTREX, self.CENTREY, blob.cx(), blob.cy()),thickness=1)
+                    return(angle, distance)
+        return(self.NO_DATA, self.NO_DATA)
 
 
     def findBlobs(self):
@@ -110,14 +111,29 @@ class Find():
 
         self.screenshot()
 
-        yellowBlobs = self.img.find_blobs(self.thresholds[0],x_stride=5, y_stride=5, area_threshold=200, pixel_threshold=200, merge=True, margin=23)
-        blueBlobs = self.img.find_blobs(self.thresholds[1],x_stride=5, y_stride=5, area_threshold=200, pixel_threshold=200, merge=True, margin=23)
+        goalBlobs = self.img.find_blobs(self.thresholds[0:], x_stride=5, y_stride=5, area_threshold=200, pixel_threshold=200, merge=True, margin=23)
 
+        # Blob Codes #
+        # yellow = 1
+        # blue = 2
 
-        attackX, attackY, attackE = self.sortBlobs(self.attackIsYellow and yellowBlobs or blueBlobs)
-        defendX, defendY, defendE = self.sortBlobs(self.attackIsYellow and blueBlobs or yellowBlobs)
+        yellowBlobs = []
+        blueBlobs = []
 
-        return([attackX, attackY, attackE, defendX, defendY, defendE])
+        for blob in goalBlobs:
+            if blob.code() == 1:
+                yellowBlobs.append(blob)
+            elif blob.code() == 2:
+                blueBlobs.append(blob)
+
+        if self.attackIsYellow:
+            attackAngle, attackDist = self.sortBlobs(yellowBlobs)
+            defendAngle, defendDist = self.sortBlobs(blueBlobs)
+        else:
+            attackAngle, attackDist = self.sortBlobs(blueBlobs)
+            defendAngle, defendDist = self.sortBlobs(yellowBlobs)
+
+        return([attackAngle, attackDist, defendAngle, defendDist])
 
 
 
@@ -133,19 +149,21 @@ class Send():
 
     def sendData(self, data):
 
-        sendData = [255]
+        print(', '.join(map(str, data)))
 
-        for i in data:
-            i = round(i)
-            #print(', '.join(map(str, data)))
-            sendData.append(i >> 8)
-            sendData.append(i)
+        # - Data to write - #
+        # Starting byte
+        self.uart.writechar(255)
 
-        for i in sendData:
-            self.uart.writechar(i)
+        # Attack Data
+        self.uart.writechar(data[0] >> 8)
+        self.uart.writechar(data[0])
+        self.uart.writechar(data[1])
 
-
-
+        # Defend Data
+        self.uart.writechar(data[2] >> 8)
+        self.uart.writechar(data[2])
+        self.uart.writechar(data[3])
 
 
 
@@ -171,4 +189,4 @@ while(True):
     data = finder.findBlobs()
     sender.sendData(data)
 
-    print(clock.fps())
+    #print(clock.fps())
