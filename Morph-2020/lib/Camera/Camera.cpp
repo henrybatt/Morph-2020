@@ -19,7 +19,7 @@ void Camera::read(){
             }
             
             attack = GoalData(camBuffer[0] << 8 | camBuffer[1], camBuffer[2]);
-            defend = GoalData(camBuffer[3] << 8 | camBuffer[4], camBuffer[5]);
+            defend = GoalData(mod((camBuffer[3] << 8 | camBuffer[4]) + 180, 360), camBuffer[5]);
         }
     }
 }
