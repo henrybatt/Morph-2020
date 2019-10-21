@@ -111,7 +111,7 @@ void Bluetooth::updateRole(Role *calcRole){
 
         } else if (ROBOT){
             // Default *role decider - Defender
-            if (shouldSwitchRole((role == Role::attack ? thisData : otherData), 
+            if (shouldSwitch((role == Role::attack ? thisData : otherData), 
                                 (role == Role::defend ? thisData : otherData))){
                 *calcRole = role == Role::defend ? Role::attack : Role::defend;
             }
@@ -135,12 +135,7 @@ void Bluetooth::updateRole(Role *calcRole){
 }
 
 
-
-
-
-
-
-bool shouldSwitchRole(BluetoothData attacker, BluetoothData defender){
+bool Bluetooth::shouldSwitch(BluetoothData attacker, BluetoothData defender){
     return (angleIsInside(360 - SWITCH_DEFEND_ANGLE, SWITCH_DEFEND_ANGLE, defender.ballData.angle) && defender.ballData.strength > SWITCH_DEFEND_STRENGTH)
             && ((angleIsInside(360 - SWITCH_ATTACK_ANGLE, SWITCH_ATTACK_ANGLE, attacker.ballData.angle) && attacker.ballData.strength < SWITCH_ATTACK_STRENGTH) 
                 || attacker.ballData.strength <  SWITCH_ATTACK_FAR_STRENGTH)
