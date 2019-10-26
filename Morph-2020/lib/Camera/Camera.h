@@ -2,9 +2,6 @@
 #define CAMERA_H
 
 #include <Arduino.h>
-#include <Define.h>
-#include <Pins.h>
-#include <Debug.h>
 #include <Common.h>
 
 #include <GoalData.h>

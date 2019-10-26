@@ -1,5 +1,41 @@
 #ifndef PINS_H
 #define PINS_H
 
+#include <Arduino.h>
+
+
+
+
+
+// --- Motors --- //
+
+// Front Right
+#define MOTOR_FRONT_RIGHT_ENA 37
+#define MOTOR_FRONT_RIGHT_IN1 36
+#define MOTOR_FRONT_RIGHT_IN2 35
+#define MOTOR_FRONT_RIGHT_ANGLE 45
+#define MOTOR_FRONT_RIGHT_REVERSED true
+
+// Back Right
+#define MOTOR_BACK_RIGHT_ENA 23
+#define MOTOR_BACK_RIGHT_IN1 21
+#define MOTOR_BACK_RIGHT_IN2 22
+#define MOTOR_BACK_RIGHT_ANGLE 135
+#define MOTOR_BACK_RIGHT_REVERSED false
+
+// Back Left
+#define MOTOR_BACK_LEFT_ENA 4
+#define MOTOR_BACK_LEFT_IN1 6
+#define MOTOR_BACK_LEFT_IN2 5
+#define MOTOR_BACK_LEFT_ANGLE 225
+#define MOTOR_BACK_LEFT_REVERSED true
+
+// Front Left
+#define MOTOR_FRONT_LEFT_ENA 29
+#define MOTOR_FRONT_LEFT_IN1 28
+#define MOTOR_FRONT_LEFT_IN2 27
+#define MOTOR_FRONT_LEFT_ANGLE 315
+#define MOTOR_FRONT_LEFT_REVERSED true
+
 
 #endif

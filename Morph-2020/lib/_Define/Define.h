@@ -5,6 +5,11 @@
 
 #define ROBOT 1
 
+// --- Motor -- //
+#define MOTOR_NUM 4
+
+
+
 
 // --- Camera --- //
 #define cameraSerial Serial4

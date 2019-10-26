@@ -12,30 +12,37 @@
 
 
 #include <Bluetooth.h>
+#include <MotorController.h>
+
 
 Camera Cam;
 Bluetooth bt;
 
+MotorController Motor;
+
 void setup() {
 
 
-    Cam.init();
 
+    Motor.init();
+
+    // Cam.init();
 }
 
 Role role = Role::undecided;
 
 void loop() {
     // Cam.update();
-
-    Serial.println(Cam.attack.visible());
-
     // bt.update(&role);
+
+
+    """ REDO BLUETOOTH TO HAVE ROLE MANAGER """;
 
     // ballInfo.isOut = LightArray.isOutsideLine(heading, ballInfo.angle);
     // bluetoothData = BluetoothData(ballInfo, lineInfo, playMode, heading, position.robotPosition, Cam.defend.distance);
     // bt.update(&role, bluetoothData);
 
+    Motor.up    date(MoveData(100,100,100));
 
 
 
