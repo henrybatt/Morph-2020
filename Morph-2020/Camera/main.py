@@ -7,7 +7,7 @@ ATTACK_YELLOW = True
 ROBOT = 1   # 1=A, 0=B
 
 DEBUG_WHITEBAL = False
-DEBUGGING = False
+DEBUGGING = True
 
 
 ## ======================= BLOB Finder =======================
@@ -83,7 +83,7 @@ class Find():
         y = object.cy() - (self.CENTREY)
         angle = (450 - degrees(atan2(y, x))) % 360
         distance = (sqrt(x**2 + y**2))
-        return int(angle), int(distance)
+        return angle, distance
 
 
     def whiteBal(self):
@@ -149,23 +149,33 @@ class Send():
 
     def sendData(self, data):
 
-        #print(', '.join(map(str, data)))
+        data = [round(x) for x in data]
 
         # - Data to write - #
         # Starting byte
-        self.uart.writechar(255)
+        sendData = [255]
 
         # Attack Data
-        self.uart.writechar(data[0] >> 8)
-        self.uart.writechar(data[0])
-        self.uart.writechar(data[1])
+        sendData.append(data[0] >> 8)
+        sendData.append(data[0])
+        sendData.append(data[1])
 
         # Defend Data
-        self.uart.writechar(data[2] >> 8)
-        self.uart.writechar(data[2])
-        self.uart.writechar(data[3])
+        sendData.append(data[2] >> 8)
+        sendData.append(data[2])
+        sendData.append(data[3])
+
+        # - Ensure no data is the same as starting byte - #
+        for i in range(1, len(sendData)):
+            if(sendData[i] == 255): sendData[i] -= 1
+
+        # - Send Data - #
+        for d in sendData:
+            self.uart.writechar(d)
 
 
+        #print(', '.join(map(str, data)))
+        #print(', '.join(map(str, sendData)))
 
 
 ## ======================= MAIN =======================

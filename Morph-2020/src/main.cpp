@@ -26,12 +26,16 @@ void setup() {
 Role role = Role::undecided;
 
 void loop() {
-    Cam.update();
+    // Cam.update();
+
+    Serial.println(Cam.attack.visible());
+
     // bt.update(&role);
 
     // ballInfo.isOut = LightArray.isOutsideLine(heading, ballInfo.angle);
     // bluetoothData = BluetoothData(ballInfo, lineInfo, playMode, heading, position.robotPosition, Cam.defend.distance);
-    bt.update(&role, bluetoothData);
+    // bt.update(&role, bluetoothData);
+
 
 
 
