@@ -40,12 +40,12 @@ double Vector::getMag(double _i, double _j){
 
 
 double Vector::getI(double _arg, double _mag){
-    return _mag * sin(toRadians(_arg));
+    return _mag * sinf(toRadians(_arg));
 }
 
 
 double Vector::getJ(double _arg, double _mag){
-    return _mag * cos(toRadians(_arg));
+    return _mag * cosf(toRadians(_arg));
 }
 
 

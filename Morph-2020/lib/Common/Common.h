@@ -5,6 +5,7 @@
 #include <math.h>
 
 #include <Define.h>
+#include <Pins.h>
 #include <Debug.h>
 
 #define PI 3.1415926535897932384626433832795
