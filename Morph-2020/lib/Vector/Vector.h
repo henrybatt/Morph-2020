@@ -3,9 +3,6 @@
 
 #include <Arduino.h>
 #include <Common.h>
-#include <Define.h>
-#include <Debug.h>
-
 
 class Vector {
 

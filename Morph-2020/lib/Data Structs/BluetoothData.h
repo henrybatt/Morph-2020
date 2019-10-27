@@ -9,7 +9,7 @@
 
 #include <BallData.h>
 #include <LineData.h>
-#include <Role.h>
+#include <RoleData.h>
 #include <Vector.h>
 
 struct BluetoothData{
@@ -17,19 +17,19 @@ struct BluetoothData{
     BallData ballData;
     LineData lineData;
     Role role;
-    Vector robotPosition;
     uint16_t heading;
+    Vector robotPosition;
 
     BluetoothData(){
         ballData = BallData();
         lineData = LineData();
         role = Role::undecided;
-        robotPosition = Vector();
         heading = 0;
+        robotPosition = Vector();
     }
 
-    BluetoothData(BallData ballData, LineData lineData, Role role, Vector robotPosition, uint16_t heading) : 
-                    ballData(ballData), lineData(lineData), role(role), robotPosition(robotPosition), heading(heading) {}
+    BluetoothData(BallData ballData, LineData lineData, Role role, uint16_t heading, Vector robotPosition) : 
+                    ballData(ballData), lineData(lineData), role(role), heading(heading), robotPosition(robotPosition) {}
 
 };
 

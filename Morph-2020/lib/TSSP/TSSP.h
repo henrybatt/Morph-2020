@@ -9,8 +9,13 @@
 class TSSP{
     public:
 
+        TSSP() {}
+
         void init();
         void update();
+
+        BallData data;
+        BallData getBallData();
 
     private:
 
@@ -27,8 +32,8 @@ class TSSP{
         int tsspAdditionA[TSSP_NUM];
         int tsspAdditionB[TSSP_NUM];
 
-}
+};
 
-
+extern TSSP tssps;
 
 #endif

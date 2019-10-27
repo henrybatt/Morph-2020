@@ -153,16 +153,16 @@ class Send():
 
         # - Data to write - #
         # Starting byte
-        sendData = [255]
+        sendData = [255, 255]
 
         # Attack Data
-        sendData.append(data[0] >> 8)
-        sendData.append(data[0])
+        sendData.append((data[0] >> 8) & 0xFF)
+        sendData.append(data[0] & 0x7F)
         sendData.append(data[1])
 
         # Defend Data
-        sendData.append(data[2] >> 8)
-        sendData.append(data[2])
+        sendData.append((data[2] >> 8) & 0xFF)
+        sendData.append(data[2] & 0x7F)
         sendData.append(data[3])
 
         # - Ensure no data is the same as starting byte - #

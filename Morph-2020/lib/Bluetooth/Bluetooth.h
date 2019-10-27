@@ -5,23 +5,25 @@
 #include <Common.h>
 
 #include <BluetoothData.h>
-
 #include <Timer.h>
 
 class Bluetooth{
 
     public:
 
+        Bluetooth() {}
+
         /* -- Setup Bluetooth -- */
         void init();
 
         /* -- Update Data and send + recieve -- */
-        void update(Role *role, BluetoothData data);
+        void update(BluetoothData data);
 
         bool isConnected;
 
         bool previouslyConnected;
 
+        BluetoothData thisData = BluetoothData();
         BluetoothData otherData = BluetoothData();
 
     private:
@@ -30,18 +32,10 @@ class Bluetooth{
 
         void recieve();
 
-        void updateRole(Role *role);
-
-        bool shouldSwitch(BluetoothData attacker, BluetoothData defender);
-
-        BluetoothData thisData = BluetoothData();
-
         Timer disconnectTimer = Timer(BT_DISCONNECT_TIME);
-
-        Role defaultRole = ROBOT ? Role::defend : Role::attack;
 
 };
 
-
+extern Bluetooth bluetooth;
 
 #endif

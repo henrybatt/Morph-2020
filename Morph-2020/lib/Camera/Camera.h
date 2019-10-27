@@ -10,6 +10,8 @@
 class Camera{
     public:
 
+        Camera() {}
+
         /* -- Structures of goal data -- */
         GoalData attack;
         GoalData defend;
@@ -27,7 +29,7 @@ class Camera{
         int closestDistance();
 
         /* -- Find closest goal in centimeters -- */
-        double closestCentimeter();
+        float closestCentimeter();
 
         /* -- If attacking goal closest -- */
         bool attackClosest();
@@ -51,4 +53,7 @@ class Camera{
         int currentin;
 
 };
+
+extern Camera camera;
+
 #endif

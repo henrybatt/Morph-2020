@@ -1,5 +1,7 @@
 #include <TSSP.h>
 
+TSSP tssps = TSSP();
+
 void TSSP::init(){
     for (uint8_t i = 0; i < TSSP_NUM; i++){
         pinMode(pins[i], INPUT);
@@ -69,4 +71,9 @@ void TSSP::calculateAngleStrength(uint8_t n){
     
 
 
+}
+
+
+BallData TSSP::getBallData(){
+    return data;
 }

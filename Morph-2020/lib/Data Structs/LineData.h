@@ -10,29 +10,29 @@
 
 struct LineData{
 
-    double angle;
-    double size;
-    bool onField;
+    uint16_t angle;
+    uint8_t state;
 
     LineData(){
         angle = NO_LINE_ANGLE;
-        size = NO_LINE_SIZE;
-        onField = true;
+        state = NO_LINE_STATE;
     }
 
-    LineData(double angle, double size) : angle(angle), size(size) {}
+    LineData(uint16_t angle, uint8_t state) : angle(angle), state(state) {}
 
-    LineData(double angle, double size, bool onField) : angle(angle), size(size), onField(onField) {}
-
+    /* -- If robot is on field (not on line) -- */
+    bool onField(){
+        return state == 0;
+    }
 
     /* -- Operators -- */
 
     bool operator == (LineData line2){
-        return angle == line2.angle && size == line2.size && onField == line2. onField;
+        return angle == line2.angle && state == line2.state;
     }
 
     bool operator != (LineData line2){
-        return angle != line2.angle || size != line2.size || onField != line2.onField;
+        return angle != line2.angle || state != line2.state;
     }
 
 };

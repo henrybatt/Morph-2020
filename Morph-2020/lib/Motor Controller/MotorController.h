@@ -9,9 +9,11 @@
 class MotorController{
 
     public:
+    
+        MotorController() {}
+
         void init();
         void update(MoveData movement);
-
 
     private:
 
@@ -26,5 +28,7 @@ class MotorController{
         float speeds[MOTOR_NUM] = {0};
     
 };
+
+extern MotorController motors;
 
 #endif

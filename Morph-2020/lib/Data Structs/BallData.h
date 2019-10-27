@@ -20,8 +20,8 @@ class BallData{
 
         /* -- Initialise Empty Struct -- */
         BallData(){
-            angle = TSSP_NO_BALL;
-            strength = 0;
+            angle = TSSP_NO_BALL_ANGLE;
+            strength = TSSP_NO_BALL_STRENGTH;
         }
 
         BallData(uint16_t angle, uint8_t strength) : angle(angle), strength(strength) {}
@@ -52,7 +52,7 @@ class BallData{
 
     private:
 
-        double distance(){
+        float distance(){
             return 123;
         }
 

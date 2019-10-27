@@ -1,5 +1,5 @@
-#ifndef ROLE_H
-#define ROLE_H
+#ifndef ROLEDATA_H
+#define ROLEDATA_H
 
 #include <Arduino.h>
 #include <Define.h>

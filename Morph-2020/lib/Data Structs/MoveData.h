@@ -14,9 +14,9 @@ struct MoveData{
 
     MoveData() {}
 
-    MoveData(double angle, double speed) : angle(angle), speed(speed) {}
+    MoveData(uint16_t angle, uint8_t speed) : angle(angle), speed(speed) {}
 
-    MoveData(double angle, double speed, double correction) : angle(angle), speed(speed), correction(correction) {}
+    MoveData(uint16_t angle, uint8_t speed, uint8_t correction) : angle(angle), speed(speed), correction(correction) {}
 
 };
 

@@ -1,5 +1,6 @@
 #include <Camera.h>
 
+Camera camera = Camera();
 
 void Camera::init(){
     cameraSerial.begin(CAM_BAUD);
@@ -10,16 +11,18 @@ void Camera::init(){
 
 void Camera::read(){
     if (cameraSerial.available() >= CAM_PACKET_SIZE){
-        if (cameraSerial.read() == CAM_START_BYTE){
+        if (cameraSerial.read() == CAM_START_BYTE, cameraSerial.peek() == CAM_START_BYTE){
             newCamData = true;
-            uint8_t camBuffer[CAM_PACKET_SIZE - 1];
+            cameraSerial.read();
+            uint8_t camBuffer[CAM_PACKET_SIZE - 2];
 
-            for (int i = 0; i < CAM_PACKET_SIZE - 1; i++){
+            for (uint8_t i = 0; i < CAM_PACKET_SIZE - 2; i++){
                 camBuffer[i] = cameraSerial.read();
             }
             
             attack = GoalData(camBuffer[0] << 8 | camBuffer[1], camBuffer[2]);
-            defend = GoalData(mod((camBuffer[3] << 8 | camBuffer[4]) + 180, 360), camBuffer[5]);
+            defend = GoalData(mod((camBuffer[3] << 8 | camBuffer[4]), 360), camBuffer[5]);
+
         }
     }
 }
@@ -66,7 +69,7 @@ int Camera::closestDistance(){
 }
 
 
-double Camera::closestCentimeter(){
+float Camera::closestCentimeter(){
     if(attack.visible() || defend.visible()){
         if(!attack.visible()){
             return defend.calculateCentimeter();

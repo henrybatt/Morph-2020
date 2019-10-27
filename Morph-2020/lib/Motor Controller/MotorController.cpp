@@ -1,5 +1,8 @@
 #include <MotorController.h>
 
+MotorController motors = MotorController();
+
+
 void MotorController::init(){
     for (uint8_t i = 0; i < MOTOR_NUM; i++){
         pinMode(ena[i], OUTPUT);
@@ -35,11 +38,14 @@ void MotorController::move(){
         uint8_t enaWrite = 255;
         bool in1Write = false;
         bool in2Write = false;
-        if (speeds[i] * 2.55 != 0){
-            enaWrite = min(255, abs(speeds[i] * 2.55));
-            in1Write = reversed[i] ? !(speeds[i] > 0) : speeds[i] > 0;
+        int16_t speed = speeds[i] * 2.55;
+
+        if (speed != 0){
+            enaWrite = min(255, abs(speed));
+            in1Write = reversed[i] ? !(speed > 0) : speed > 0;
             in2Write = !in1Write;
         }
+
         digitalWrite(in1[i], in1Write);
         digitalWrite(in2[i], in2Write);
         analogWrite(ena[i], enaWrite);

@@ -1,49 +1,65 @@
 #include <Arduino.h>
-#include <Define.h>
 #include <Common.h>
 
-
+#include <IMU.h>
+#include <LSArray.h>
+#include <TSSP.h>
 #include <Camera.h>
-
-
-#include <BallData.h>
-#include <LineData.h>
-#include <Role.h>
-
-
 #include <Bluetooth.h>
+#include <RoleManager.h>
 #include <MotorController.h>
 
+#include <PID.h>
+#include <Timer.h>
 
-Camera Cam;
-Bluetooth bt;
+#include <MoveData.h>
+#include <RoleData.h>
+#include <Vector.h>
 
-MotorController Motor;
+Timer BTSendTimer = Timer(BT_UPDATE_TIME);
+
+float heading;
+
+MoveData moveData;
+
 
 void setup() {
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWriteFast(LED_BUILTIN, HIGH);
 
+    imu.init();
+    lightArray.init();
+    tssps.init();
+    camera.init();
+    bluetooth.init();
+    roleManager.init();
+    motors.init();
 
+    digitalWriteFast(LED_BUILTIN, LOW);
 
-    Motor.init();
-
-    // Cam.init();
 }
 
-Role role = Role::undecided;
 
 void loop() {
-    // Cam.update();
-    // bt.update(&role);
 
+    imu.update();
+    lightArray.update(heading);
+    tssps.update();
 
-    """ REDO BLUETOOTH TO HAVE ROLE MANAGER """;
+    #if CAMERA
+        camera.update();
+    #endif
 
-    // ballInfo.isOut = LightArray.isOutsideLine(heading, ballInfo.angle);
-    // bluetoothData = BluetoothData(ballInfo, lineInfo, playMode, heading, position.robotPosition, Cam.defend.distance);
-    // bt.update(&role, bluetoothData);
+    if (BTSendTimer.timeHasPassed() && SWITCHING){
+        bluetooth.update(BluetoothData(tssps.getBallData(), lightArray.getLineData(), roleManager.getRole(), heading, Vector()));
+        roleManager.update();
+    }
 
-    Motor.up    date(MoveData(100,100,100));
+    motors.update(moveData);
 
+    // roleManager.roleLED();
+
+    """ Remove all ints and doubles """;
 
 
 }

@@ -1,11 +1,14 @@
 #include <Bluetooth.h>
 
 
+Bluetooth bluetooth = Bluetooth();
+
 void Bluetooth::init(){
     BTSerial.begin(BT_BAUD);
 }
 
-void Bluetooth::update(Role *role, BluetoothData data){
+
+void Bluetooth::update(BluetoothData data){
 
     thisData = data;
     
@@ -13,43 +16,42 @@ void Bluetooth::update(Role *role, BluetoothData data){
 
     recieve();
 
-    updateRole(*&role);
-
 }
 
 
 void Bluetooth::send(){
 
-    // Starting Byte
+    // Starting Bytes
+    BTSerial.write(BT_START_BYTE);
     BTSerial.write(BT_START_BYTE);
 
     // Ball Angle
-    BTSerial.write(highByte(thisData.ballData.angle));
-    BTSerial.write(lowByte(thisData.ballData.angle));
+    BTSerial.write((thisData.ballData.angle >> 8) & 0xFF);
+    BTSerial.write(thisData.ballData.angle & 0xFF);
 
     // Ball Strength
-    BTSerial.write(highByte(thisData.ballData.strength));
-    BTSerial.write(lowByte(thisData.ballData.strength));
+    BTSerial.write((thisData.ballData.strength >> 8) & 0xFF);
+    BTSerial.write(thisData.ballData.strength & 0xFF);
 
     // Ball Out
     BTSerial.write(thisData.ballData.isOut);
 
-    // OnField
-    BTSerial.write(thisData.lineData.onField);
+    // Line State
+    BTSerial.write(thisData.lineData.state);
 
-    // *role
+    // Role
     BTSerial.write(thisData.role);
 
-    // Robot Position
-    BTSerial.write(highByte(round(thisData.robotPosition.i)));
-    BTSerial.write(lowByte(round(thisData.robotPosition.i)));
-
-    BTSerial.write(highByte(round(thisData.robotPosition.j)));
-    BTSerial.write(lowByte(round(thisData.robotPosition.j)));
-
     // Heading
-    BTSerial.write(highByte(thisData.heading));
-    BTSerial.write(lowByte(thisData.heading));
+    BTSerial.write((thisData.heading >> 8) & 0xFF);
+    BTSerial.write(thisData.heading & 0xFF);
+
+    // Robot Position
+    BTSerial.write(((int8_t)thisData.robotPosition.i >> 8) & 0xFF);
+    BTSerial.write((int8_t)thisData.robotPosition.i & 0xFF);
+
+    BTSerial.write(((int8_t)thisData.robotPosition.j >> 8) & 0xFF);
+    BTSerial.write((int8_t)thisData.robotPosition.j & 0xFF);
 
 }
 
@@ -58,13 +60,12 @@ void Bluetooth::recieve(){
 
     bool recievedData = false;
 
-
     while (BTSerial.available() >= BT_PACKET_SIZE){
 
-        if (BTSerial.read() == BT_START_BYTE){
-            uint8_t bluetoothBuffer[BT_PACKET_SIZE - 1];
-
-            for (int i = 0; i < BT_PACKET_SIZE - 1; i++){
+        if (BTSerial.read() == BT_START_BYTE && BTSerial.peek() == BT_START_BYTE){
+            uint8_t bluetoothBuffer[BT_PACKET_SIZE - 2];
+            BTSerial.read();
+            for (uint8_t i = 0; i < BT_PACKET_SIZE - 2; i++){   
                 bluetoothBuffer[i] = BTSerial.read();
             }
 
@@ -72,10 +73,11 @@ void Bluetooth::recieve(){
             disconnectTimer.update();
 
             otherData.ballData = BallData((bluetoothBuffer[0] << 8) | bluetoothBuffer[1], (bluetoothBuffer[2] << 8) | bluetoothBuffer[3], bluetoothBuffer[4]);
-            otherData.lineData = LineData(-1, 0, bluetoothBuffer[5]);
+            otherData.lineData = LineData(-1, bluetoothBuffer[5]);
             otherData.role = static_cast<Role>(bluetoothBuffer[6]);
-            otherData.robotPosition = Vector((bluetoothBuffer[7] << 8 | bluetoothBuffer[8]), (bluetoothBuffer[9] << 8 | bluetoothBuffer[10]));
-            otherData.heading = (bluetoothBuffer[11] << 8 | bluetoothBuffer[12]);
+            otherData.heading = (bluetoothBuffer[7] << 8 | bluetoothBuffer[8]);
+            otherData.robotPosition = Vector((int8_t)(bluetoothBuffer[9] << 8 | bluetoothBuffer[10]), (int8_t)(bluetoothBuffer[11] << 8 | bluetoothBuffer[12]));
+
 
         }
     }
@@ -92,52 +94,6 @@ void Bluetooth::recieve(){
 }
 
 
-void Bluetooth::updateRole(Role *calcRole){
-
-    Role role = *calcRole;
-
-    Role previousRole = role;
-
-    if (isConnected){
-
-        // Connected to  bluetooth, pick role
-        if (role == Role::undecided){
-            // Undecided Role, pick default or opposite
-            if (otherData.role == Role::undecided){
-                *calcRole = defaultRole;
-            } else {
-                *calcRole = otherData.role == Role::defend ? Role::attack : Role::defend;
-            }
-
-        } else if (ROBOT){
-            // Default *role decider - Defender
-            if (shouldSwitch((role == Role::attack ? thisData : otherData), 
-                                (role == Role::defend ? thisData : otherData))){
-                *calcRole = role == Role::defend ? Role::attack : Role::defend;
-            }
-
-        } else {
-            // Opposite of default decider
-            *calcRole = otherData.role == Role::defend ? Role::attack : Role::defend;
-
-        }
-
-        // If statement for if become defender, move out of way
-
-    } else if (previouslyConnected){
-        // Was connected, other robot went offline, switch to defense
-        *calcRole = Role::defend;
-
-    } else {
-        // Never connected, pick default Role
-        *calcRole = defaultRole;
-    }
-}
 
 
-bool Bluetooth::shouldSwitch(BluetoothData attacker, BluetoothData defender){
-    return (angleIsInside(360 - SWITCH_DEFEND_ANGLE, SWITCH_DEFEND_ANGLE, defender.ballData.angle) && defender.ballData.strength > SWITCH_DEFEND_STRENGTH)
-            && ((angleIsInside(360 - SWITCH_ATTACK_ANGLE, SWITCH_ATTACK_ANGLE, attacker.ballData.angle) && attacker.ballData.strength < SWITCH_ATTACK_STRENGTH) 
-                || attacker.ballData.strength <  SWITCH_ATTACK_FAR_STRENGTH)
-            && (attacker.lineData.onField && defender.lineData.onField);
-}
+
