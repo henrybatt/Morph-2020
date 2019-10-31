@@ -22,6 +22,7 @@ class GoalData{
             return angle != 65535;
         }
 
+        /* -- Calculate distance towards goal in centimeters -- */
         float calculateCentimeter(){
             return 0.00000353067 * pow(MATH_E, 0.0288427 * (distance + 500)) - 25.0921;
         }

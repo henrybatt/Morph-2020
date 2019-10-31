@@ -3,7 +3,8 @@
 
 Bluetooth bluetooth = Bluetooth();
 
-void Bluetooth::init(){
+
+Bluetooth::Bluetooth(){
     BTSerial.begin(BT_BAUD);
 }
 

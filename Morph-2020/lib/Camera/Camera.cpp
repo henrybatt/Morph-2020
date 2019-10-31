@@ -1,8 +1,10 @@
 #include <Camera.h>
 
+
 Camera camera = Camera();
 
-void Camera::init(){
+
+Camera::Camera(){
     cameraSerial.begin(CAM_BAUD);
     newCamData = true;
     read();
@@ -55,7 +57,7 @@ void Camera::goalTrack(){
 }
 
 
-int Camera::closestDistance(){
+uint8_t Camera::closestDistance(){
     if(attack.visible()|| defend.visible()){
         if(!attack.visible()){
             return defend.distance;

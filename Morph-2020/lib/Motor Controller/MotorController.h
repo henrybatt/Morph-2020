@@ -9,10 +9,10 @@
 class MotorController{
 
     public:
-    
-        MotorController() {}
 
-        void init();
+        /* -- Class Constructor + Init -- */
+        MotorController();
+
         void update(MoveData movement);
 
     private:

@@ -1,8 +1,10 @@
 #include <IMU.h>
 
+
 IMU imu = IMU();
 
-void IMU::init(){
+
+IMU::IMU(){
     Wire.begin();
     I2CwriteByte(MPU9250_ADDRESS, 29, 0x06);
     I2CwriteByte(MPU9250_ADDRESS, 26, 0x06);
@@ -12,6 +14,27 @@ void IMU::init(){
     I2CwriteByte(MAG_ADDRESS, 0x0A, 0x16);
     previousTime = micros();
     calibrate();
+}
+
+
+void IMU::update(){
+    float reading = (float)readGyroscope().z;
+
+	long currentTime = micros();
+    heading += -(((float)(currentTime - previousTime) / 1000000.0) * (reading - calibration));
+    if(millis() - previousDrift > 100) {
+        heading += drift;
+        previousDrift = millis();
+    }
+	heading = floatMod(heading, 360.0);
+
+	previousTime = currentTime;
+
+    #if DEBUG_COMPASS
+        Serial.print(heading);
+        Serial.print(", ");
+        Serial.println(correction);
+    #endif
 }
 
 
@@ -59,27 +82,6 @@ Vector3D IMU::readMagnetometer(){
 }
 
 
-void IMU::update(){
-    float reading = (float)readGyroscope().z;
-
-	long currentTime = micros();
-    heading += -(((float)(currentTime - previousTime) / 1000000.0) * (reading - calibration));
-    if(millis() - previousDrift > 100) {
-        heading += drift;
-        previousDrift = millis();
-    }
-	heading = floatMod(heading, 360.0);
-
-	previousTime = currentTime;
-
-    #if DEBUG_COMPASS
-        Serial.print(heading);
-        Serial.print(", ");
-        Serial.println(correction);
-    #endif
-}
-
-
 void IMU::calibrate(){
     for (uint8_t i = 0; i < IMU_CALIBRATION_COUNT; i++) {
         float readingGyro = (float)readGyroscope().z;
@@ -106,4 +108,9 @@ float IMU::convertRawAcceleration(int raw){
 float IMU::convertRawGyro(int raw){
     float g = (raw * 1000.0) / 32768.0;
     return g;
+}
+
+
+float IMU::getHeading(){
+    return heading;
 }

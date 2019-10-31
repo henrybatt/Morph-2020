@@ -10,10 +10,9 @@
 class LSArray {
 
     public:
-        LSArray() {}
 
-        /* -- Initalise LS -- */
-        void init();
+        /* -- Class Constructor + Init -- */
+        LSArray();
 
         /* -- Update onWhite State -- */
         void update(float _heading);

@@ -1,8 +1,10 @@
 #include <TSSP.h>
 
+
 TSSP tssps = TSSP();
 
-void TSSP::init(){
+
+TSSP::TSSP(){
     for (uint8_t i = 0; i < TSSP_NUM; i++){
         pinMode(pins[i], INPUT);
     }
@@ -12,7 +14,6 @@ void TSSP::init(){
     } else {
         for (uint8_t i = 0; i < TSSP_NUM; i++) tsspAddition[i] = tsspAdditionB[i];
     }
-
 }
 
 
@@ -20,12 +21,13 @@ void TSSP::update(){
 
     for (uint8_t i = 0; i < TSSP_READ_NUM; i++){
         for (uint8_t i = 0; i < TSSP_NUM; i++){
-            readValues[i] += digitalReadFast(pins[i]) ^ 1;
+            readValues[i] += 1 - digitalReadFast(pins[i]);
         }
     }
 
     for (uint8_t i = 0; i < TSSP_NUM; i++){
-        values[i] = (100 * readValues[i] / TSSP_READ_NUM) + tsspAddition[i];
+        // values[i] = (100 * readValues[i] / TSSP_READ_NUM) + tsspAddition[i];
+        values[i] = readValues[i];
         readValues[i] = 0;
         sortedValues[i] = 0;
         indexes[i] = 0;
@@ -60,16 +62,27 @@ void TSSP::update(){
 
 
 void TSSP::calculateAngleStrength(uint8_t n){
-    int8_t x = 0;
-    int8_t y = 0;
+    int16_t x = 0;
+    int16_t y = 0;
 
     for (uint8_t i = 0; i < n; i++){
         x += sortedValues[i] * cos(toRadians(indexes[i] * TSSP_NUM_MULTIPLIER));
         y += sortedValues[i] * sin(toRadians(indexes[i] * TSSP_NUM_MULTIPLIER));
     }
 
-    
+    data.strength = sqrtf(pow(x, 2) + pow(y, 2));
+    int test = ((3 * sortedValues[0]) + (2 * sortedValues[1]) + sortedValues[2] + sortedValues[3]) / 7;
+    data.angle = data.strength != 0 ? floatMod(toDegrees(atan2(y, x)), 360) : TSSP_NO_BALL_ANGLE;
 
+    Serial.print(test);
+    Serial.print(" , ");
+    Serial.println(data.strength);
+
+    #if DEBUG_BALL_DATA
+        Serial.print(data.angle);
+        Serial.print("\t");
+        Serial.println(data.strength);
+    #endif
 
 }
 

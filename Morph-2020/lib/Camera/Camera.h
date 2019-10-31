@@ -10,14 +10,12 @@
 class Camera{
     public:
 
-        Camera() {}
+        /* -- Class Constructor + Init -- */
+        Camera();
 
         /* -- Structures of goal data -- */
         GoalData attack;
         GoalData defend;
-
-        /* -- Setup Camera Serial and read-- */
-        void init();
 
         /* -- Read Camera data and update angles and distances -- */
         void update();
@@ -26,7 +24,7 @@ class Camera{
         void goalTrack();
 
         /* -- Find closest goal in pixels -- */
-        int closestDistance();
+        uint8_t closestDistance();
 
         /* -- Find closest goal in centimeters -- */
         float closestCentimeter();
@@ -45,12 +43,7 @@ class Camera{
         /* -- Read from camera serial to get x & y values of goals -- */
         void read();
 
-        /* -- Calculate distance towards goal in centimeters -- */
-        int calculateCentimeter(int distance);
-
         bool newCamData;
-
-        int currentin;
 
 };
 

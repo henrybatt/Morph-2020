@@ -1,8 +1,10 @@
 #include <LSArray.h>
 
+
 LSArray lightArray = LSArray();
 
-void LSArray::init(){
+
+LSArray::LSArray(){
     for (uint8_t i = 0; i < 4; i++){
         pinMode(controller1[i], OUTPUT);
         pinMode(controller2[i], OUTPUT);

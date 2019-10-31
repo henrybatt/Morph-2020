@@ -13,10 +13,9 @@
 class RoleManager{
 
     public:
-        RoleManager() {}
 
-        /* -- Initalise RoleManager and set default role -- */
-        void init();
+        /* -- Class Constructor + Init -- */
+        RoleManager();
 
         /* -- Update current role and handles switching -- */
         void update();

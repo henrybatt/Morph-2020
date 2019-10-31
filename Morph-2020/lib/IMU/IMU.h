@@ -10,13 +10,12 @@ class IMU {
 
     public:
 
-        IMU () {}
-
-        void init();
+        /* -- Class Constructor + Init -- */
+        IMU();
 
         void update();
 
-        float heading;
+        float getHeading();
 
     private:
 
@@ -28,6 +27,8 @@ class IMU {
 
         float convertRawAcceleration(int raw);
         float convertRawGyro(int raw);
+
+        float heading;
 
         long previousTime;
         long previousDrift;

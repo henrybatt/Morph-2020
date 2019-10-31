@@ -1,8 +1,10 @@
 #include <RoleManager.h>
 
+
 RoleManager roleManager = RoleManager();
 
-void RoleManager::init(){
+
+RoleManager::RoleManager(){
     defaultRole = ROBOT ? Role::defend : Role::attack;
 }
 

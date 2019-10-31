@@ -7,6 +7,7 @@
 #include <Camera.h>
 #include <Bluetooth.h>
 #include <RoleManager.h>
+#include <DirectionManager.h>
 #include <MotorController.h>
 
 #include <PID.h>
@@ -18,32 +19,13 @@
 
 Timer BTSendTimer = Timer(BT_UPDATE_TIME);
 
+void setup() {}
+
 float heading;
-
-MoveData moveData;
-
-
-void setup() {
-    pinMode(LED_BUILTIN, OUTPUT);
-    digitalWriteFast(LED_BUILTIN, HIGH);
-
-    imu.init();
-    lightArray.init();
-    tssps.init();
-    camera.init();
-    bluetooth.init();
-    roleManager.init();
-    motors.init();
-
-    digitalWriteFast(LED_BUILTIN, LOW);
-
-}
-
-
 void loop() {
 
     imu.update();
-    lightArray.update(heading);
+    lightArray.update(imu.getHeading());
     tssps.update();
 
     #if CAMERA
@@ -51,13 +33,16 @@ void loop() {
     #endif
 
     if (BTSendTimer.timeHasPassed() && SWITCHING){
-        bluetooth.update(BluetoothData(tssps.getBallData(), lightArray.getLineData(), roleManager.getRole(), heading, Vector()));
+        bluetooth.update(BluetoothData(tssps.getBallData(), lightArray.getLineData(), roleManager.getRole(), imu.getHeading(), Vector()));
         roleManager.update();
     }
 
-    motors.update(moveData);
+    directionManager.update();
 
-    // roleManager.roleLED();
+    motors.update(MoveData(270, 10, 0));
+
+    roleManager.roleLED();
+
 
     """ Remove all ints and doubles """;
 

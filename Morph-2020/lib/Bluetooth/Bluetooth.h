@@ -11,10 +11,8 @@ class Bluetooth{
 
     public:
 
-        Bluetooth() {}
-
-        /* -- Setup Bluetooth -- */
-        void init();
+        /* -- Class Constructor + Init -- */
+        Bluetooth();
 
         /* -- Update Data and send + recieve -- */
         void update(BluetoothData data);
