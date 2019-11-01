@@ -90,5 +90,23 @@
 #define ACC_FULL_SCALE_16_G 0x18
 
 
+/* --- Field Information --- */
+#define FIELD_WIDTH_CM 182
+#define FIELD_LENGTH_CM 243
+#define GOAL_OFFSET_CM 30
+#define DEFENDING_BOX_WIDTH_CM 30
+#define FIELD_LENGTH_WITH_GOAL (FIELD_LENGTH_CM/2 - GOAL_OFFSET_CM)
+
+
+/* --- Coords --- */
+#define COORD_THRESHOLD_DISTANCE 2
+
+//Coords to move when no ball visible
+#define NO_BALL_COORD_X 0
+#define NO_BALL_COORD_Y 0
+
+//Coords to move when other robot sees ball is out of field
+#define BALL_OUT_COORD_X 0
+#define BALL_OUT_COORD_Y -30
 
 #endif

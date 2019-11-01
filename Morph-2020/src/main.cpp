@@ -10,18 +10,13 @@
 #include <DirectionManager.h>
 #include <MotorController.h>
 
-#include <PID.h>
 #include <Timer.h>
-
-#include <MoveData.h>
-#include <RoleData.h>
-#include <Vector.h>
 
 Timer BTSendTimer = Timer(BT_UPDATE_TIME);
 
 void setup() {}
 
-float heading;
+
 void loop() {
 
     imu.update();
@@ -37,17 +32,35 @@ void loop() {
         roleManager.update();
     }
 
-    directionManager.update();
-
-    motors.update(MoveData(270, 10, 0));
+    motors.update(directionManager.update());
 
     roleManager.roleLED();
 
 
     """ Remove all ints and doubles """;
+    """ REDO VECTORS BAD!!!!!!!!!!! """;
 
 
 }
 
-
 /* --  -- */
+
+
+
+/*
+BallData ballInfo;
+
+void orbit(){
+
+    double angle;
+
+    double strengthModifier = (((double)ballInfo.strength - (double)BALL_FAR_STRENGTH) / ((double)BALL_CLOSE_STRENGTH - (double)BALL_FAR_STRENGTH));
+    double value = ballInfo.angle > 180 ? ballInfo.angle - 360 : ballInfo.angle;
+    double angleAddition = angleIsInside(325, 35, angle) ? (value * 1.1 * strengthModifier) : findSign(value) * (90 * strengthModifier);
+
+    double moveAngle = angle + angleAddition;
+
+    
+
+}
+*/

@@ -55,4 +55,39 @@ struct Vector3D {
 };
 
 
+
+
+
+/* --- PID --- */
+
+#define HEADING_KP 0
+#define HEADING_KI 0
+#define HEADING_KD 0
+#define HEADING_MAX_CORRECTION 255
+
+#define ATTACK_GOAL_TRACK_KP 0
+#define ATTACK_GOAL_TRACK_KI 0
+#define ATTACK_GOAL_TRACK_KD 0
+#define ATTACK_GOAL_TRACK_MAX_CORRECTION 255
+
+#define DEFEND_GOAL_TRACK_KP 0
+#define DEFEND_GOAL_TRACK_KI 0
+#define DEFEND_GOAL_TRACK_KD 0
+#define DEFEND_GOAL_TRACK_MAX_CORRECTION 255
+
+#define X_MOVEMENT_KP 0
+#define X_MOVEMENT_KI 0
+#define X_MOVEMENT_KD 0
+#define X_MOVEMENT_MAX 255
+
+#define Y_MOVEMENT_KP 0
+#define Y_MOVEMENT_KI 0
+#define Y_MOVEMENT_KD 0
+#define Y_MOVEMENT_MAX 255
+
+#define TO_COORD_KP 4
+#define TO_COORD_KI 0
+#define TO_COORD_KD 0
+#define TO_COORD_MAX_SPEED 100
+
 #endif
