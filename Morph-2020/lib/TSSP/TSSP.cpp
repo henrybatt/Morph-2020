@@ -74,9 +74,9 @@ void TSSP::calculateAngleStrength(uint8_t n){
     int test = ((3 * sortedValues[0]) + (2 * sortedValues[1]) + sortedValues[2] + sortedValues[3]) / 7;
     data.angle = data.strength != 0 ? floatMod(toDegrees(atan2(y, x)), 360) : TSSP_NO_BALL_ANGLE;
 
-    Serial.print(test);
-    Serial.print(" , ");
-    Serial.println(data.strength);
+    // Serial.print(test);
+    // Serial.print(" , ");
+    // Serial.println(data.strength);
 
     #if DEBUG_BALL_DATA
         Serial.print(data.angle);
@@ -84,6 +84,21 @@ void TSSP::calculateAngleStrength(uint8_t n){
         Serial.println(data.strength);
     #endif
 
+}
+
+
+float TSSP::calculateAngleAddition(){
+    float value = data.angle > 180 ? data.angle - 360 : data.angle;
+    float ballAngleDifference = findSign(value) * fmin(90, 0.4 * expf(ANGLE_DIFF_MULTIPLIER * smallestAngleBetween(data.angle, 0)));
+    float strengthFactor = constrain((data.strength - BALL_FAR_STRENGTH) / (BALL_CLOSE_STRENGTH - BALL_FAR_STRENGTH), 0, 1);
+    float distanceMultiplier = constrain((0.02 * strengthFactor * expf(4.5 * strengthFactor)), 0, 1);
+    angleAddition = ballAngleDifference * distanceMultiplier;
+    return angleAddition;
+}
+
+
+float TSSP::getAngleAddition(){
+    return angleAddition;
 }
 
 

@@ -27,7 +27,10 @@ class CoordinateManager{
         Vector getBallPosition();
 
         Vector robotPosition;
+        Vector ballRelativePosition;
         Vector ballPosition;
+
+        bool isCoord = false;
 
         // Goal Coordinates
         Vector defendGoal = Vector(0, -(FIELD_LENGTH_CM / 2) + GOAL_OFFSET_CM);

@@ -82,11 +82,15 @@ void CoordinateManager::calculateRobotPosition(){
         // Robot Position calculation. Polar > Cartesian
         int8_t i = constrain(distance * -sin(toRadians(angle)), (-FIELD_WIDTH_CM / 2), (FIELD_WIDTH_CM / 2));
         int8_t j = constrain(FIELD_LENGTH_WITH_GOAL * quadrant + (distance * -cos(toRadians(angle))), (-FIELD_LENGTH_CM / 2), (FIELD_LENGTH_CM / 2));
+        isCoord = true;
         robotPosition = Vector(i, j);
+    } else {
+        isCoord = false;
     }
 }
 
 
 void CoordinateManager::calculateBallPosition(){
-    ballPosition = robotPosition + tssps.data.vector(imu.getHeading());
+    ballRelativePosition = tssps.data.vector(imu.getHeading());
+    ballPosition = robotPosition + ballRelativePosition;
 }

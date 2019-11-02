@@ -32,7 +32,7 @@ void Camera::read(){
 
 void Camera::update(){
     read();
-
+    goalTrack();
     #if DEBUG_CAMERA
         Serial.print("Attack Angle: ");
         Serial.print(attack.angle);

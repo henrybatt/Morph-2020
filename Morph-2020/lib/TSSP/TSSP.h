@@ -14,6 +14,9 @@ class TSSP{
 
         void update();
 
+        float calculateAngleAddition();
+        float getAngleAddition();
+
         BallData data;
         BallData getBallData();
 
@@ -31,6 +34,8 @@ class TSSP{
         int8_t tsspAddition[TSSP_NUM] = {0};
         int8_t tsspAdditionA[TSSP_NUM];
         int8_t tsspAdditionB[TSSP_NUM];
+
+        float angleAddition;
 
 };
 

@@ -16,6 +16,57 @@ Timer BTSendTimer = Timer(BT_UPDATE_TIME);
 
 void setup() {}
 
+/*
+float bounds(float lightAngle, float ballAngle){
+
+    Serial.print(" , ");
+    Serial.print(mod(mod(lightAngle + 180, 360) - ballAngle, 360));
+
+  if((mod(lightAngle + 180 - ballAngle, 360)) > 0 && (mod(lightAngle + 180 - ballAngle, 360)) < 180){
+    // need to move on upper bound
+    return mod(lightAngle + 60, 360);
+  }
+  else{
+    // lower bound
+    return mod(lightAngle - 60, 360);
+  }
+
+
+}
+
+
+void testing(){
+
+    float orbitAngle = 160;
+    float ballAngle = 160;
+
+    float lineAngle = 315;
+    float returnLineAngle = mod(lineAngle + 180, 360);
+
+    float newMove = 0;
+
+    if (smallestAngleBetween(returnLineAngle, ballAngle) < 90){
+
+        if (smallestAngleBetween(returnLineAngle, orbitAngle) < 60){
+            newMove = orbitAngle;
+            Serial.print("Normal");
+        } else if (smallestAngleBetween(returnLineAngle, orbitAngle) < 150){
+            Serial.print("Bounds");
+            newMove = bounds(returnLineAngle, orbitAngle);
+        } else {
+            Serial.print("STOP");
+            newMove = -1;
+        }
+
+    } else {
+        newMove = 420;
+    }
+
+    Serial.print(" , ");
+    Serial.println(newMove);
+
+}
+*/
 
 void loop() {
 
@@ -25,10 +76,11 @@ void loop() {
 
     #if CAMERA
         camera.update();
+        coordManager.update();
     #endif
 
     if (BTSendTimer.timeHasPassed() && SWITCHING){
-        bluetooth.update(BluetoothData(tssps.getBallData(), lightArray.getLineData(), roleManager.getRole(), imu.getHeading(), Vector()));
+        bluetooth.update(BluetoothData(tssps.getBallData(), lightArray.getLineData(), roleManager.getRole(), imu.getHeading(), coordManager.getRobotPosition()));
         roleManager.update();
     }
 
@@ -36,9 +88,9 @@ void loop() {
 
     roleManager.roleLED();
 
-
-    """ Remove all ints and doubles """;
     """ REDO VECTORS BAD!!!!!!!!!!! """;
+
+    // testing();
 
 
 }
@@ -52,13 +104,13 @@ BallData ballInfo;
 
 void orbit(){
 
-    double angle;
+    float angle;
 
-    double strengthModifier = (((double)ballInfo.strength - (double)BALL_FAR_STRENGTH) / ((double)BALL_CLOSE_STRENGTH - (double)BALL_FAR_STRENGTH));
-    double value = ballInfo.angle > 180 ? ballInfo.angle - 360 : ballInfo.angle;
-    double angleAddition = angleIsInside(325, 35, angle) ? (value * 1.1 * strengthModifier) : findSign(value) * (90 * strengthModifier);
+    float strengthModifier = (((float)ballInfo.strength - (float)BALL_FAR_STRENGTH) / ((float)BALL_CLOSE_STRENGTH - (float)BALL_FAR_STRENGTH));
+    float value = ballInfo.angle > 180 ? ballInfo.angle - 360 : ballInfo.angle;
+    float angleAddition = angleIsInside(325, 35, angle) ? (value * 1.1 * strengthModifier) : findSign(value) * (90 * strengthModifier);
 
-    double moveAngle = angle + angleAddition;
+    float moveAngle = angle + angleAddition;
 
     
 

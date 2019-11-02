@@ -8,10 +8,48 @@
 #define CAMERA true
 #define SWITCHING true
 
+
+/* --- Orbit --- */
+#define ORBIT_SURGE_SPEED 60
+#define ORBIT_FAST_SPEED 145 // Vertical movement of orbit
+#define ORBIT_SLOW_SPEED 130 // Horizontal movement
+#define BALL_CLOSE_STRENGTH 145
+#define BALL_FAR_STRENGTH 50
+#define ANGLE_DIFF_MULTIPLIER 0.20
+
+
+/* --- Out Avoidance Speed --- */
+
+
+
+/* --- Attacker --- */
+#define ATTACK_SURGE_STRENGTH 180 // Strength of ball to surge 
+#define ATTACK_CAPTURE_ANGLE 15 // Angle range of ball to surge
+
+// --- Defender --- //
+#define DEFEND_SPEED 50
+#define DEFEND_DISTANCE 74//65//60
+#define DEFEND_DISTANCE_CM 25 //Distance from goal in CM to sit at
+
+#define DEFEND_SURGE_STRENGTH 160 // Strength of ball to surge
+#define DEFEND_CAPTURE_ANGLE 15 // Angle range of ball to surge
+
+#define DEFEND_SURGE_DISTANCE 94//82//82  //70 // Distance from goal to surge till
+#define DEFEND_SURGE_Y -30
+
+
+/* --- Kicker --- */
+#define KICKER_GOAL_ANGLE 30
+#define KICKER_DISCHARGE_TIME 1000000
+#define KICKER_LAST_TIMER 1000000
+#define KICKER_PIN 0
+#define LIGHTGATE_PIN 0
+#define LIGHTGATE_THRESHOLD 0 
+
+
+
 /* --- Motor -- */
 #define MOTOR_NUM 4
-
-
 
 
 /* --- Camera --- */
@@ -41,9 +79,6 @@
 #define TSSP_NUM 18
 #define TSSP_NUM_MULTIPLIER 20 //360 / LS_NUM
 #define TSSP_READ_NUM 255
-#define BALL_CLOSE_STRENGTH 145
-#define BALL_FAR_STRENGTH 50
-#define ANGLE_DIFF_MULTIPLIER 0.15
 #define TSSP_PERIOD 4
 
 

@@ -59,13 +59,13 @@ bool RoleManager::shouldSwitch(BluetoothData attacker, BluetoothData defender){
 
 void RoleManager::roleLED(){
     if (getRole() == Role::attack && attackLEDTimer.timeHasPassed()){
-        digitalWrite(LED_BUILTIN, ledOn);
+        digitalWriteFast(LED_BUILTIN, ledOn);
         ledOn = !ledOn;
     } else if (getRole() == Role::defend && defendLEDTimer.timeHasPassed()){
-        digitalWrite(LED_BUILTIN, ledOn);
+        digitalWriteFast(LED_BUILTIN, ledOn);
         ledOn = !ledOn;
     } else if (getRole() == Role::undecided && undecidedLEDTimer.timeHasPassed()){
-        digitalWrite(LED_BUILTIN, ledOn);
+        digitalWriteFast(LED_BUILTIN, ledOn);
         ledOn = !ledOn;
     }
 }

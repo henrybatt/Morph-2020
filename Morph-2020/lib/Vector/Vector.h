@@ -12,24 +12,24 @@ class Vector {
         Vector();
 
         /* -- I & J or Arg & Mag -- */
-        Vector(double _x, double _y, bool cartesian = true);
+        Vector(float _x, float _y, bool cartesian = true);
 
         /* -- Vector Exists -- */
         bool exists();
 
         /* -- Vector is between two angles -- */
-        bool between(double leftAngle, double rightAngle);
+        bool between(float leftAngle, float rightAngle);
 
 
-        double i, j;
-        double arg, mag;
+        float i, j;
+        float arg, mag;
 
 
         /* -- Operators -- */
         Vector operator+(Vector vector2);
         Vector operator-(Vector vector2);
-        Vector operator*(double scalar);
-        Vector operator/(double scalar);
+        Vector operator*(float scalar);
+        Vector operator/(float scalar);
 
         bool operator==(Vector vector2);
         bool operator!=(Vector vector2);
@@ -41,22 +41,22 @@ class Vector {
     private:
 
         /* -- Calculate Argument -- */
-        double getArg(double _i, double _j);
+        float getArg(float _i, float _j);
 
         /* -- Calculate magnitude -- */
-        double getMag(double _i, double _j);
+        float getMag(float _i, float _j);
 
         /* -- Calculate I -- */
-        double getI(double _arg, double _mag);
+        float getI(float _arg, float _mag);
 
         /* -- Calculate J -- */
-        double getJ(double _arg, double _mag);
+        float getJ(float _arg, float _mag);
 
         /* -- Convert to Polar -- */
-        void getPolar(double _i, double _j);
+        void getPolar(float _i, float _j);
 
         /* -- Convert to cartesian -- */
-        void getCartesian(double _arg, double _mag);   
+        void getCartesian(float _arg, float _mag);   
 
 };
 

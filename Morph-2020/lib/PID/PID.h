@@ -5,17 +5,17 @@
 
 class PID {
     public:
-        PID(double p, double i, double d, double absoluteMax = 0.0);
-        double kp;
-        double ki;
-        double kd;
-        double update(double input, double setpoint, double modulus = 0.0);
+        PID(float p, float i, float d, float absoluteMax = 0.0);
+        float kp;
+        float ki;
+        float kd;
+        float update(float input, float setpoint, float modulus = 0.0);
     private:
         unsigned long lastTime;
-        double lastError = 0;
-        double absMax;
-        double integral;
-        double last;
+        float lastError = 0;
+        float absMax;
+        float integral;
+        float last;
 };
 
 #endif // PID_H

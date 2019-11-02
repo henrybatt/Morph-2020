@@ -6,12 +6,12 @@ Vector::Vector(){
 }
 
 
-Vector::Vector(double _x, double _y, bool cartesian){
+Vector::Vector(float _x, float _y, bool cartesian){
     cartesian ? getPolar(_x, _y) : getCartesian(_x, _y);
 }
 
 
-void Vector::getPolar(double _i, double _j){
+void Vector::getPolar(float _i, float _j){
     i = _i;
     j = _j;
 
@@ -20,7 +20,7 @@ void Vector::getPolar(double _i, double _j){
 }
 
 
-void Vector::getCartesian(double _arg, double _mag){
+void Vector::getCartesian(float _arg, float _mag){
     arg = _arg;
     mag = _mag;
 
@@ -29,22 +29,22 @@ void Vector::getCartesian(double _arg, double _mag){
 }
 
 
-double Vector::getArg(double _i, double _j){
-    return doubleMod(90 - toDegrees(atan2(_j, _i)), 360);
+float Vector::getArg(float _i, float _j){
+    return floatMod(90 - toDegrees(atan2(_j, _i)), 360);
 }
 
 
-double Vector::getMag(double _i, double _j){
+float Vector::getMag(float _i, float _j){
     return sqrt(_i * _i + _j * _j);
 }
 
 
-double Vector::getI(double _arg, double _mag){
+float Vector::getI(float _arg, float _mag){
     return _mag * sinf(toRadians(_arg));
 }
 
 
-double Vector::getJ(double _arg, double _mag){
+float Vector::getJ(float _arg, float _mag){
     return _mag * cosf(toRadians(_arg));
 }
 
@@ -54,7 +54,7 @@ bool Vector::exists(){
 }
 
 
-bool Vector::between(double leftAngle, double rightAngle){
+bool Vector::between(float leftAngle, float rightAngle){
     return isAngleBetween(arg, leftAngle, rightAngle);
 }
 
@@ -69,12 +69,12 @@ Vector Vector::operator-(Vector vector2){
 }
 
 
-Vector Vector::operator*(double scalar){
+Vector Vector::operator*(float scalar){
     return Vector(arg, mag * scalar, false);
 }
 
 
-Vector Vector::operator/(double scalar){
+Vector Vector::operator/(float scalar){
     return Vector(arg, mag / scalar, false);
 }
 

@@ -15,28 +15,25 @@
 #define TO_DEGREES 57.295779513082320876798154814105
 
 
-double toDegrees(double rad);
-double toRadians(double deg);
+float toDegrees(float rad);
+float toRadians(float deg);
 
 int mod(int value, int maxValue);
 float floatMod(float value, float maxValue);
-double doubleMod(double value, double maxValue);
 
-int findSign(double value);
+int findSign(float value);
 
-bool isAngleBetween(double angle, double leftAngle, double rightAngle);
+bool isAngleBetween(float angle, float leftAngle, float rightAngle);
 
-bool angleIsInside(double angleBoundCounterClockwise, double angleBoundClockwise, double angleCheck);
+bool angleIsInside(float angleBoundCounterClockwise, float angleBoundClockwise, float angleCheck);
 
-double angleBetween(double angleCounterClockwise, double angleClockwise);
-double smallestAngleBetween(double angle1, double angle2);
-double midAngleBetween(double angleCounterClockwise, double angleClockwise);
+float angleBetween(float angleCounterClockwise, float angleClockwise);
+float smallestAngleBetween(float angle1, float angle2);
+float midAngleBetween(float angleCounterClockwise, float angleClockwise);
 
-double doubleAbs(double value);
-
-double distanceBetween(double x1, double y1, double x2, double y2);
-double updateMax(double max, double newVal);
-double angleMap(double angle, double max);
+float distanceBetween(float x1, float y1, float x2, float y2);
+float updateMax(float max, float newVal);
+float angleMap(float angle, float max);
 
 #define ARRAYSHIFTDOWN(a, lower, upper){          \
     if (upper == (sizeof(a)/sizeof(a[0])) - 1){   \
@@ -49,9 +46,9 @@ double angleMap(double angle, double max);
 
 // --- Structures --- //
 struct Vector3D {
-  double x;
-  double y;
-  double z;
+  float x;
+  float y;
+  float z;
 };
 
 
@@ -60,30 +57,28 @@ struct Vector3D {
 
 /* --- PID --- */
 
-#define HEADING_KP 0
-#define HEADING_KI 0
-#define HEADING_KD 0
-#define HEADING_MAX_CORRECTION 255
+#define IMU_KP 0
+#define IMU_KI 0
+#define IMU_KD 0
+#define IMU_MAX_CORRECTION 100
 
 #define ATTACK_GOAL_TRACK_KP 0
 #define ATTACK_GOAL_TRACK_KI 0
 #define ATTACK_GOAL_TRACK_KD 0
-#define ATTACK_GOAL_TRACK_MAX_CORRECTION 255
+#define ATTACK_GOAL_TRACK_MAX_CORRECTION 100
 
 #define DEFEND_GOAL_TRACK_KP 0
 #define DEFEND_GOAL_TRACK_KI 0
 #define DEFEND_GOAL_TRACK_KD 0
-#define DEFEND_GOAL_TRACK_MAX_CORRECTION 255
+#define DEFEND_GOAL_TRACK_MAX_CORRECTION 100
 
 #define X_MOVEMENT_KP 0
 #define X_MOVEMENT_KI 0
 #define X_MOVEMENT_KD 0
-#define X_MOVEMENT_MAX 255
 
 #define Y_MOVEMENT_KP 0
 #define Y_MOVEMENT_KI 0
 #define Y_MOVEMENT_KD 0
-#define Y_MOVEMENT_MAX 255
 
 #define TO_COORD_KP 4
 #define TO_COORD_KI 0

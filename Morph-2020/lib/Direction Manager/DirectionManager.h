@@ -10,7 +10,7 @@
 #include <RoleManager.h>
 #include <IMU.h>
 #include <Bluetooth.h>
-
+#include <BallManager.h>
 #include <CoordinateManager.h>
 
 
@@ -29,13 +29,16 @@ class DirectionManager{
 
     private:
 
+        MoveData calculateOrbit();
+        MoveData calculateOtherOrbit();
+
         MoveData calculateAttack();
 
         MoveData calculateDefend();
 
         MoveData calculateAvoidance(MoveData calcMove);
 
-        MoveData calculateCorrection();
+        MoveData calculateCorrection(MoveData calcMove);
 
 
 
@@ -43,12 +46,12 @@ class DirectionManager{
 
 
 
-        PID headingPID = PID(HEADING_KP, HEADING_KI, HEADING_KD, HEADING_MAX_CORRECTION);
+        PID imuPID = PID(IMU_KP, IMU_KI, IMU_KD, IMU_MAX_CORRECTION);
         PID attackGoalTrackPID = PID(ATTACK_GOAL_TRACK_KP, ATTACK_GOAL_TRACK_KI, ATTACK_GOAL_TRACK_KD, ATTACK_GOAL_TRACK_MAX_CORRECTION);
         PID defendGoalTrackPID = PID(DEFEND_GOAL_TRACK_KP, DEFEND_GOAL_TRACK_KI, DEFEND_GOAL_TRACK_KD, DEFEND_GOAL_TRACK_MAX_CORRECTION);
 
-        PID xPID = PID(X_MOVEMENT_KP, X_MOVEMENT_KI, X_MOVEMENT_KD, X_MOVEMENT_MAX);
-        PID yPID = PID(Y_MOVEMENT_KP, Y_MOVEMENT_KI, Y_MOVEMENT_KD, Y_MOVEMENT_MAX);
+        PID xPID = PID(X_MOVEMENT_KP, X_MOVEMENT_KI, X_MOVEMENT_KD, DEFEND_SPEED);
+        PID yPID = PID(Y_MOVEMENT_KP, Y_MOVEMENT_KI, Y_MOVEMENT_KD, DEFEND_SPEED);
 };
 
 extern DirectionManager directionManager;
