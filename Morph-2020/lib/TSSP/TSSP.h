@@ -22,7 +22,7 @@ class TSSP{
 
     private:
 
-        void calculateAngleStrength(uint8_t n);
+        void calculateAngleStrength();
 
         uint16_t readValues[TSSP_NUM] = {0};
         uint16_t values[TSSP_NUM] = {0};

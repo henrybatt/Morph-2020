@@ -47,7 +47,6 @@
 #define LIGHTGATE_THRESHOLD 0 
 
 
-
 /* --- Motor -- */
 #define MOTOR_NUM 4
 
@@ -68,7 +67,7 @@
 #define BT_BAUD 9600 //38400 //115200
 #define BTSerial Serial5
 #define BT_START_BYTE 255
-#define BT_PACKET_SIZE 15
+#define BT_PACKET_SIZE 16
 #define BT_DISCONNECT_TIME 1000000
 #define BT_UPDATE_TIME 100000
 
@@ -92,6 +91,7 @@
 
 
 /* --- Switching --- */
+#define SWITCH_TIMER 2000000
 // Ball must be within front of the defender and close
 #define SWITCH_DEFEND_ANGLE 20
 #define SWITCH_DEFEND_STRENGTH 165
