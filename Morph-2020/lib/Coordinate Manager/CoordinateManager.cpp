@@ -7,10 +7,14 @@ CoordinateManager coordManager = CoordinateManager();
 CoordinateManager::CoordinateManager(){}
 
 
-void CoordinateManager::update(){
+void CoordinateManager::update(float _heading){
+
+    heading = _heading;
 
     calculateRobotPosition();
     calculateBallPosition();
+
+    newCoordTimer.update();
 
 }
 
@@ -18,7 +22,7 @@ void CoordinateManager::update(){
 bool CoordinateManager::moveToCoord(MoveData *calcMove, Vector target){
     if (camera.goalVisible()){
         // Movement can be calculated, move by the point difference between coords
-        moveByDifference(*&calcMove, target - robotPosition);
+        return moveByDifference(*&calcMove, target - robotPosition);
     } else {
         // Cannot calculate poisition, stop
         *calcMove = MoveData(-1, 0);
@@ -40,9 +44,11 @@ bool CoordinateManager::moveByDifference(MoveData *calcMove, Vector diff){
     if (diff.mag < COORD_THRESHOLD_DISTANCE){
         // At coords, stop
         *calcMove = MoveData(-1, 0);
+        return true;
     } else {
         // Calculate direction towards coords
-        *calcMove = MoveData(mod(diff.arg - imu.getHeading(), 360), abs(coordPID.update(diff.mag, 0)));
+        *calcMove = MoveData(mod(diff.arg - heading, 360), abs(coordPID.update(diff.mag, 0)));
+        return false;
     }
 }
 
@@ -53,7 +59,7 @@ MoveData CoordinateManager::moveByDifference(Vector diff){
         return MoveData(-1, 0);
     } else {
         // Calculate direction towards coords
-        return MoveData(mod(diff.arg - imu.getHeading(), 360), abs(coordPID.update(diff.mag, 0)));
+        return MoveData(mod(diff.arg - heading, 360), abs(coordPID.update(diff.mag, 0)));
     }
 }
 
@@ -72,7 +78,7 @@ void CoordinateManager::calculateRobotPosition(){
 
     if (camera.goalVisible()){
         uint16_t angle = camera.attackClosest() ? camera.attack.angle : camera.defend.angle;
-        angle = mod(angle + imu.getHeading(), 360);
+        angle = mod(angle + heading, 360);
 
         float distance = camera.closestCentimeter();
 
@@ -91,6 +97,11 @@ void CoordinateManager::calculateRobotPosition(){
 
 
 void CoordinateManager::calculateBallPosition(){
-    ballRelativePosition = tssps.data.vector(imu.getHeading());
+    ballRelativePosition = tssps.data.vector(heading);
     ballPosition = robotPosition + ballRelativePosition;
+}
+
+
+bool CoordinateManager::newCoordUpdate(){
+    return !newCoordTimer.timeHasPassedNoUpdate();
 }

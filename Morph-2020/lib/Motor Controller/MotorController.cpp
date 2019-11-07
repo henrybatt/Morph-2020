@@ -20,10 +20,10 @@ void MotorController::update(MoveData movement){
         for(uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] = cosf(toRadians(motorAngle[i] + 90 - movement.angle));         
 
         float maxVal = fmax(fmax(fmax(abs(speeds[0]), abs(speeds[1])), abs(speeds[2])), abs(speeds[3]));
-        for(uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] = speeds[i] * (movement.speed / maxVal) + movement.correction; 
+        for(uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] = round(speeds[i] * (movement.speed / maxVal)) + movement.correction; 
 
         maxVal = fmax(fmax(fmax(abs(speeds[0]), abs(speeds[1])), abs(speeds[2])), abs(speeds[3]));
-        for(uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] *= (movement.speed / maxVal);
+        for(uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] = round(speeds[i] * (movement.speed / maxVal));
             
     } else {
         for(uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] = movement.correction;
@@ -43,7 +43,7 @@ void MotorController::move(){
 
         if (speed != 0){
             enaWrite = min(255, abs(speed));
-            in1Write = reversed[i] ? !(speed > 0) : speed > 0;
+            in1Write = reversed[i] ? speed < 0 : speed > 0;
             in2Write = !in1Write;
         }
 

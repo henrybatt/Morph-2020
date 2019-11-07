@@ -8,12 +8,11 @@
 #include <LSArray.h>
 #include <Camera.h>
 #include <RoleManager.h>
-#include <IMU.h>
 #include <Bluetooth.h>
 #include <BallManager.h>
 #include <CoordinateManager.h>
 
-
+#include <LineData.h>
 #include <MoveData.h>
 
 #include <PID.h>
@@ -25,7 +24,7 @@ class DirectionManager{
         /* -- Class Constructor + Init -- */
         DirectionManager();
 
-        MoveData update();
+        MoveData update(BallData _ballData, float _heading);
 
     private:
 
@@ -40,11 +39,10 @@ class DirectionManager{
 
         MoveData calculateCorrection(MoveData calcMove);
 
+        float calculateAvoianceBounce(float orbitAngle, float lineAngle);
 
-
-
-
-
+        float heading;
+        BallData ballData;
 
         PID imuPID = PID(IMU_KP, IMU_KI, IMU_KD, IMU_MAX_CORRECTION);
         PID attackGoalTrackPID = PID(ATTACK_GOAL_TRACK_KP, ATTACK_GOAL_TRACK_KI, ATTACK_GOAL_TRACK_KD, ATTACK_GOAL_TRACK_MAX_CORRECTION);

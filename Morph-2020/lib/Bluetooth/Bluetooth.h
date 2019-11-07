@@ -21,6 +21,9 @@ class Bluetooth{
 
         bool previouslyConnected;
 
+        BluetoothData getThisData();
+        BluetoothData getOtherData();
+
         BluetoothData thisData = BluetoothData();
         BluetoothData otherData = BluetoothData();
 

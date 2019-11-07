@@ -6,11 +6,11 @@
 
 #include <TSSP.h>
 #include <Camera.h>
-#include <IMU.h>
 
 #include <MoveData.h>
 #include <Vector.h>
 #include <PID.h>
+#include <Timer.h>
 
 class CoordinateManager{
 
@@ -18,13 +18,15 @@ class CoordinateManager{
 
         CoordinateManager();
 
-        void update();
+        void update(float _heading);
 
         bool moveToCoord(MoveData *calcMove, Vector target);
         MoveData moveToCoord(Vector target);
 
         Vector getRobotPosition();
         Vector getBallPosition();
+
+        bool newCoordUpdate();
 
         Vector robotPosition;
         Vector ballRelativePosition;
@@ -45,7 +47,11 @@ class CoordinateManager{
         bool moveByDifference(MoveData *calcMove, Vector diff);
         MoveData moveByDifference(Vector diff);
 
+        float heading;
+
         PID coordPID = PID(TO_COORD_KP, TO_COORD_KI, TO_COORD_KD, TO_COORD_MAX_SPEED);
+
+        Timer newCoordTimer = Timer(NEW_COORD_TIMER);
 };
 
 extern CoordinateManager coordManager;

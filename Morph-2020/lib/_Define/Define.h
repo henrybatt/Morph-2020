@@ -10,16 +10,23 @@
 
 
 /* --- Orbit --- */
-#define ORBIT_SURGE_SPEED 60
-#define ORBIT_FAST_SPEED 145 // Vertical movement of orbit
-#define ORBIT_SLOW_SPEED 130 // Horizontal movement
-#define BALL_CLOSE_STRENGTH 145
-#define BALL_FAR_STRENGTH 50
-#define ANGLE_DIFF_MULTIPLIER 0.20
+#define ORBIT_SURGE_SPEED 80
+#define ORBIT_FAST_SPEED 60 // Vertical movement of orbit
+#define ORBIT_SLOW_SPEED 40 // Horizontal movement
+#define BALL_CLOSE_STRENGTH 155
+#define BALL_FAR_STRENGTH 0
+#define ANGLE_DIFF_MULTIPLIER 0.15
 
 
-/* --- Out Avoidance Speed --- */
-
+/* --- Out Avoidance --- */
+#define AVOID_RETURN_SPEED 60 // Speed if over line
+#define AVOID_BOUNCE_SPEED 40 // Speed to bounce towards ball
+#define AVOID_OTHER_SPEED 20 // Speed if not bounce
+#define AVOID_NORMAL_ANGLE 60 // Angle to move straight towards ball
+#define AVOID_BOUNCE_ANGLE 150 // Angle to bounce
+#define LINE_CORNER_ANGLE_THRESHOLD 30 // If angle mod 90 greater than value and less than 90 - value, must be on corner
+#define LINE_BUFFER -10 // If orbit angle within line angle and buffer, must want to move outside line
+#define LINE_BUFFER_CORNER -10 // ^
 
 
 /* --- Attacker --- */
@@ -85,6 +92,7 @@
 #define LS_NUM 32
 #define LS_NUM_MULTIPLIER 11.25 // 360 / LS_NUM
 #define NO_LINE_ANGLE -1
+#define NO_LINE_SIZE 0
 #define NO_LINE_STATE 0
 #define LS_CALIBRATION_COUNT 50
 #define LS_CALIBRATION_BUFFER 300
@@ -143,5 +151,7 @@
 //Coords to move when other robot sees ball is out of field
 #define BALL_OUT_COORD_X 0
 #define BALL_OUT_COORD_Y -30
+
+#define NEW_COORD_TIMER 500000
 
 #endif

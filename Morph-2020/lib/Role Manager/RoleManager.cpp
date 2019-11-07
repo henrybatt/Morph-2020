@@ -37,7 +37,7 @@ void RoleManager::requestSwitch(){
 
 
 bool RoleManager::hasSwitched(){
-    !switchTimer.timeHasPassedNoUpdate();
+    return !switchTimer.timeHasPassedNoUpdate();
 }
 
 
@@ -47,7 +47,8 @@ bool RoleManager::isSwitching(){
 
 
 Role RoleManager::getRole(){
-    return (currentRole == Role::undecided ? defaultRole : currentRole);
+    return Role::attack;
+    // return (currentRole == Role::undecided ? defaultRole : currentRole);
 }
 
 

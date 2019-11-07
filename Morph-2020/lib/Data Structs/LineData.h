@@ -10,7 +10,7 @@
 
 struct LineData{
 
-    uint16_t angle;
+    float angle;
     uint8_t state;
 
     LineData(){
@@ -18,15 +18,14 @@ struct LineData{
         state = NO_LINE_STATE;
     }
 
-    LineData(uint16_t angle, uint8_t state) : angle(angle), state(state) {}
+    LineData(float angle, uint8_t state) : angle(angle), state(state) {}
 
-    /* -- If robot is on field (not on line) -- */
     bool onField(){
         return state == 0;
     }
 
-    /* -- Operators -- */
 
+    /* -- Operators -- */
     bool operator == (LineData line2){
         return angle == line2.angle && state == line2.state;
     }

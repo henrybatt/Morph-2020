@@ -21,12 +21,13 @@ void TSSP::update(){
 
     for (uint8_t i = 0; i < TSSP_READ_NUM; i++){
         for (uint8_t i = 0; i < TSSP_NUM; i++){
+            if (ROBOT && (i == 5)) continue;
             readValues[i] += 1 - digitalReadFast(pins[i]);
         }
     }
 
     for (uint8_t i = 0; i < TSSP_NUM; i++){
-        values[i] = readValues[i] == 0 ? 0 : readValues[i] + tsspAddition[i];
+        values[i] = readValues[i] == 0 ? 0 : 100 * readValues[i]/255 + tsspAddition[i];
         readValues[i] = 0;
         sortedValues[i] = 0;
         indexes[i] = 0;
@@ -69,8 +70,7 @@ void TSSP::calculateAngleStrength(){
         y += sortedValues[i] * sin(toRadians(indexes[i] * TSSP_NUM_MULTIPLIER));
     }
 
-    // data.strength = sqrtf(pow(x, 2) + pow(y, 2));
-    data.strength = ((6 * sortedValues[0]) + (4 * sortedValues[1]) + (2 * sortedValues[2]) + (sortedValues[3])) / 13;
+    data.strength = sqrtf(pow(x, 2) + pow(y, 2));
     data.angle = data.strength != 0 ? floatMod(toDegrees(atan2(y, x)), 360) : TSSP_NO_BALL_ANGLE;
 
     #if DEBUG_BALL_DATA
@@ -84,9 +84,9 @@ void TSSP::calculateAngleStrength(){
 
 float TSSP::calculateAngleAddition(){
     float value = data.angle > 180 ? data.angle - 360 : data.angle;
-    float ballAngleDifference = findSign(value) * fmin(90, 0.4 * expf(ANGLE_DIFF_MULTIPLIER * smallestAngleBetween(data.angle, 0)));
-    float strengthFactor = constrain((data.strength - BALL_FAR_STRENGTH) / (BALL_CLOSE_STRENGTH - BALL_FAR_STRENGTH), 0, 1);
-    float distanceMultiplier = constrain((0.02 * strengthFactor * expf(4.5 * strengthFactor)), 0, 1);
+    float ballAngleDifference = findSign(value) * fmin(90, 0.4 * pow(MATH_E, ANGLE_DIFF_MULTIPLIER * smallestAngleBetween(data.angle, 0)));
+    float strengthFactor = constrain(((float)data.strength - (float)BALL_FAR_STRENGTH) / ((float)BALL_CLOSE_STRENGTH - (float)BALL_FAR_STRENGTH), 0, 1);
+    float distanceMultiplier = constrain((0.02 * strengthFactor * pow(MATH_E, 4.5 * strengthFactor)), 0.1, 1);
     angleAddition = ballAngleDifference * distanceMultiplier;
     return angleAddition;
 }

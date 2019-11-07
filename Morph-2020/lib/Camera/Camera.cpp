@@ -13,7 +13,7 @@ Camera::Camera(){
 
 void Camera::read(){
     if (cameraSerial.available() >= CAM_PACKET_SIZE){
-        if (cameraSerial.read() == CAM_START_BYTE, cameraSerial.peek() == CAM_START_BYTE){
+        if (cameraSerial.read() == CAM_START_BYTE && cameraSerial.peek() == CAM_START_BYTE){
             newCamData = true;
             cameraSerial.read();
             uint8_t camBuffer[CAM_PACKET_SIZE - 2];

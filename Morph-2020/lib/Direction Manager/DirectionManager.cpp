@@ -9,27 +9,30 @@ DirectionManager::DirectionManager(){
 }
 
 
-MoveData DirectionManager::update(){
+MoveData DirectionManager::update(BallData _ballData, float _heading){
+    ballData = _ballData;
+    heading = _heading;
+
     if (roleManager.getRole() == Role::attack){
         return calculateCorrection(calculateAvoidance(calculateAttack()));
     } else if (roleManager.getRole() == Role::defend){
         return calculateCorrection(calculateAvoidance(calculateDefend()));
     }
+    return calculateCorrection(calculateAvoidance(MoveData(-1, 0)));
 }
 
 
 MoveData DirectionManager::calculateAttack(){
-
     if (bluetooth.otherData.ballData.isOut){
         // Defender see's ball isOut, move to centre of field
         camera.attack.face = false;
         return coordManager.moveToCoord(Vector(BALL_OUT_COORD_X, BALL_OUT_COORD_Y));
 
-    } else if (tssps.data.visible()){
+    } else if (ballData.visible()){
          // Calculate Movement towards ball.
         return calculateOrbit();
 
-    } else if (bluetooth.isConnected && bluetooth.otherData.ballData.visible()){
+    } else if (bluetooth.otherData.ballData.visible()){
         // Other Robot sees ball, move towards it
         camera.attack.face = false;
         return calculateOtherOrbit();
@@ -45,18 +48,18 @@ MoveData DirectionManager::calculateAttack(){
 
 MoveData DirectionManager::calculateDefend(){
 
-    if (tssps.data.visible()){
+    if (ballData.visible()){
         
-        if (angleIsInside(360 - DEFEND_CAPTURE_ANGLE, DEFEND_CAPTURE_ANGLE, tssps.data.angle) && tssps.data.strength > DEFEND_SURGE_STRENGTH && coordManager.robotPosition.j < DEFEND_SURGE_Y){
+        if (angleIsInside(360 - DEFEND_CAPTURE_ANGLE, DEFEND_CAPTURE_ANGLE, ballData.angle) && ballData.strength > DEFEND_SURGE_STRENGTH && coordManager.robotPosition.j < DEFEND_SURGE_Y){
             return calculateOrbit();
 
-        } else if (!angleIsInside(270, 90, tssps.data.angle)){
+        } else if (!angleIsInside(270, 90, ballData.angle)){
             // Coords for if too close to goal?
             camera.defend.face = false;
             return calculateOrbit();
 
         } else {
-            float xMove = -xPID.update((tssps.data.angle > 180 ? tssps.data.angle - 360 : tssps.data.angle), 0);
+            float xMove = -xPID.update((ballData.angle > 180 ? ballData.angle - 360 : ballData.angle), 0);
             float yMove = camera.defend.visible() ? yPID.update(camera.defend.calculateCentimeter(), DEFEND_DISTANCE_CM) : -15; // This all good?
             return MoveData(floatMod(toDegrees(atan2(yMove, xMove)), 360), sqrtf(yMove * yMove + xMove * xMove));
         }
@@ -71,6 +74,40 @@ MoveData DirectionManager::calculateDefend(){
 
 
 MoveData DirectionManager::calculateAvoidance(MoveData calcMove){
+    LineData lineData = lightArray.getLineData(); 
+
+    float returnAngle = floatMod(lineData.angle + 180 - heading, 360);
+
+    if (!lineData.onField()){
+        // Not on the field, calculate return
+        if (lineData.state >= 2){
+            // Over other side of the line, move back across
+            return MoveData(returnAngle, AVOID_RETURN_SPEED);
+
+        } else {
+            // On inside on line, calculate bounce direction
+
+            if (lightArray.isOutsideLine(calcMove.angle)){
+                // Ball is outside line, stop
+                return MoveData(-1, 0);
+
+            } else {
+                // Ball is inside field
+                if (smallestAngleBetween(calcMove.angle, returnAngle) < AVOID_BOUNCE_ANGLE){
+                // If ball is within boucing angles decide if to move direct or bounce
+                    if (smallestAngleBetween(calcMove.angle, returnAngle) < AVOID_NORMAL_ANGLE){
+                        // Withing direct return angle
+                        return calcMove;
+                    }else{
+                        // Bounce towards ball
+                        return MoveData(calculateAvoianceBounce(calcMove.angle, returnAngle), AVOID_BOUNCE_SPEED);
+                    }
+                } else {
+                    return MoveData(returnAngle, AVOID_OTHER_SPEED);
+                }
+            }
+        }
+    }
     return calcMove;
 }
 
@@ -81,7 +118,7 @@ MoveData DirectionManager::calculateCorrection(MoveData calcMove){
     } else if (roleManager.getRole() == Role::defend && camera.defend.face){
         calcMove.correction = -defendGoalTrackPID.update((camera.defend.angle > 180 ? camera.defend.angle - 360 : camera.defend.angle), 180);
     } else {
-        calcMove.correction = imuPID.update((imu.getHeading() > 180 ? imu.getHeading() - 360 : imu.getHeading()), 0);
+        calcMove.correction = imuPID.update((heading > 180 ? heading - 360 : heading), 0);
     }
     return calcMove;
 }
@@ -90,10 +127,10 @@ MoveData DirectionManager::calculateCorrection(MoveData calcMove){
 MoveData DirectionManager::calculateOrbit(){
     MoveData calcMove;
 
-    calcMove.angle = floatMod(tssps.data.angle + tssps.calculateAngleAddition(), 360);
+    calcMove.angle = floatMod(ballData.angle + tssps.calculateAngleAddition(), 360);
 
     //If ball infront of capture zone, surge forwards fast, else move at a modular speed
-    if (tssps.data.strength > ATTACK_SURGE_STRENGTH && angleIsInside(360 - ATTACK_CAPTURE_ANGLE, ATTACK_CAPTURE_ANGLE, tssps.data.angle)){
+    if (ballData.strength > ATTACK_SURGE_STRENGTH && angleIsInside(360 - ATTACK_CAPTURE_ANGLE, ATTACK_CAPTURE_ANGLE, ballData.angle)){
         calcMove.speed = ORBIT_SURGE_SPEED;
         ballManager.attackKick();
 
@@ -114,3 +151,10 @@ MoveData DirectionManager::calculateOtherOrbit(){
     //Figure out if other robots coord is good, send another value??
 
 }
+
+
+float DirectionManager::calculateAvoianceBounce(float orbitAngle, float lineAngle){
+    return ((floatMod(lineAngle + 180 - orbitAngle, 360)) > 0 && (floatMod(lineAngle + 180 - orbitAngle, 360)) < 180) 
+                ? floatMod(lineAngle + 60, 360) : floatMod(lineAngle - 60, 360);
+}
+

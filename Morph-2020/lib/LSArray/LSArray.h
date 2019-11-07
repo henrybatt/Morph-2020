@@ -5,7 +5,6 @@
 #include <Common.h>
 
 #include <LineData.h>
-#include <MoveData.h>
 
 class LSArray {
 
@@ -17,28 +16,36 @@ class LSArray {
         /* -- Update onWhite State -- */
         void update(float _heading);
 
-        /* -- Calculate angle and speed to return to field -- */
-        void calculateOutAvoidance(MoveData *calcMove);
-
         /* -- Calculate if ball is outside off line based off line angle and current orbit -- */
         bool isOutsideLine(float angle);
 
-        /* -- Structure of line data -- */
-        LineData data;
+        /* -- Return line angle -- */
+        float getLineAngle();
 
-        /* -- Return line data structure -- */
+        /* -- Return Line Data -- */
         LineData getLineData();
 
     private:
 
-        /* -- Calibrate threshol values -- */
+        /* -- Calibrate threshold values -- */
         void calibrate();
 
         /* -- Read LS and save recorded value -- */
         void readSensor(uint8_t LSNum);
 
-        /* -- Calculate angle of the line -- */
+        /* -- Calculate angle + size of the line -- */
         void calculateLine();
+
+        /* -- Calculate light sensor clusters -- */
+        void calculateClusters();
+
+
+        void calculateAvoidanceData();
+
+        /* -- Structure of line data -- */
+        LineData data;
+
+        float heading;
 
         uint8_t controller1[4] = {MUX_A_0, MUX_A_1, MUX_A_2, MUX_A_3}; // MUX binary pins
         uint8_t controller2[4] = {MUX_B_0, MUX_B_1, MUX_B_2, MUX_B_3};
@@ -48,11 +55,14 @@ class LSArray {
         uint16_t readValue[LS_NUM] = {0}; // Values read from each sensor
         bool onWhite[LS_NUM] = {0}; // If light sensor see white. If reading > threshold
 
-        float vectorX;
-        float vectorY;
-        float vectorAngle;
+        int starts[4]; // Array of cluster start indexes
+        int ends[4];   // Array of cluster end indexes
 
-        float heading;
+        int numClusters = 0;   // Number of clusters found
+        bool findClusterStart; // If cluster has begun
+
+        float angle = NO_LINE_ANGLE;
+        float size = NO_LINE_SIZE;
 
 };
 

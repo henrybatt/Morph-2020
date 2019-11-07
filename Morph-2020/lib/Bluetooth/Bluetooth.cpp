@@ -37,7 +37,7 @@ void Bluetooth::send(){
     // Ball Out
     BTSerial.write(thisData.ballData.isOut);
 
-    // Line State
+    // on Field
     BTSerial.write(thisData.lineData.state);
 
     // Role
@@ -95,6 +95,12 @@ void Bluetooth::recieve(){
 }
 
 
+BluetoothData Bluetooth::getThisData(){
+    return thisData;
+}
 
 
 
+BluetoothData Bluetooth::getOtherData(){
+    return otherData;
+}
