@@ -5,6 +5,7 @@ RoleManager roleManager = RoleManager();
 
 
 RoleManager::RoleManager(){
+	pinMode(LED_BUILTIN, OUTPUT);
     defaultRole = ROBOT ? Role::defend : Role::attack;
     isMaster = ROBOT;
 }

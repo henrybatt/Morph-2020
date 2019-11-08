@@ -52,6 +52,7 @@ class BallData{
 
     private:
 
+        /* -- Return cm distance to ball -- */
         float distance(){
             return 123;
         }

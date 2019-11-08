@@ -8,6 +8,8 @@
 #define CAMERA true
 #define SWITCHING true
 
+#define ACCELERATION true
+#define MPU_OVERRIDE false
 
 /* --- Orbit --- */
 #define ORBIT_SURGE_SPEED 80
@@ -19,7 +21,6 @@
 
 
 /* --- Acceleration --- */
-#define ACCELERATION true
 #define MAX_ACCELERATION 0.5
 
 
@@ -123,9 +124,9 @@
 #define UNDECIDED_LED 200000
 
 
-/* --- IMU Sensor --- */
-#define IMU_CALIBRATION_COUNT 20
-#define IMU_CALIBRATION_TIME 50
+/* --- MPU Sensor --- */
+#define MPU_CALIBRATION_COUNT 20
+#define MPU_CALIBRATION_TIME 50
 #define MPU9250_ADDRESS 0x68
 #define MAG_ADDRESS 0x0C
 #define GYRO_FULL_SCALE_250_DPS 0x00

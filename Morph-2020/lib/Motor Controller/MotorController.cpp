@@ -17,7 +17,6 @@ void MotorController::update(MoveData movement){
 
     if (movement.speed != 0){
 
-
         #if ACCELERATION
             calculateAcceleration(&movement);
         #endif

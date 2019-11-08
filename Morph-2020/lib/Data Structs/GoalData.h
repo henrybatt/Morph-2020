@@ -18,6 +18,7 @@ class GoalData{
 
         GoalData(uint16_t angle, uint16_t distance) : angle(angle), distance(distance) {}
 
+        /* -- Goal is visible -- */
         bool visible(){
             return angle != 65535;
         }

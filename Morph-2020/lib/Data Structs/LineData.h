@@ -20,6 +20,7 @@ struct LineData{
 
     LineData(float angle, uint8_t state) : angle(angle), state(state) {}
 
+    /* -- Robot is on field -- */
     bool onField(){
         return state == 0;
     }

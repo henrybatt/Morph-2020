@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Common.h>
 
-#include <IMU.h>
+#include <BNO055Wrapper.h>
 #include <LSArray.h>
 #include <TSSP.h>
 #include <Camera.h>
@@ -20,24 +20,29 @@ void setup() {}
 
 
 void loop() {
-
-    imu.update();
-    lightArray.update(imu.getHeading());
+    
+    // Update data
+    bnoWrapper.update();
+    lightArray.update(bnoWrapper.getHeading());
     tssps.update();
 
     #if CAMERA
+        // Read camera data & calculate coordinates
         camera.update();
-        coordManager.update(imu.getHeading());
+        coordManager.update(bnoWrapper.getHeading());
     #endif
 
     if (BTSendTimer.timeHasPassed() && SWITCHING){
-        bluetooth.update(BluetoothData(tssps.getBallData(), lightArray.getLineData(), roleManager.getRole(), imu.getHeading(), coordManager.getRobotPosition()));
+        // Send bluetooth data and decide new role
+        bluetooth.update(BluetoothData(tssps.getBallData(), lightArray.getLineData(), roleManager.getRole(), bnoWrapper.getHeading(), coordManager.getRobotPosition()));
         roleManager.update();
     }
 
-    MoveData movement = directionManager.update(tssps.getBallData(), imu.getHeading());
-
-    motors.update(movement);
+    if (true){ // If touchscreen button enabled
+        motors.update(directionManager.update(tssps.getBallData(), bnoWrapper.getHeading()));
+    } else {
+        motors.update(MoveData(0, 0, 0));
+    }
 
     roleManager.roleLED();
 

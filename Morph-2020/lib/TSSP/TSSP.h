@@ -12,16 +12,20 @@ class TSSP{
         /* -- Class Constructor + Init -- */
         TSSP();
 
+        /* -- Update all data -- */
         void update();
 
+        /* -- Calculate orbit -- */
         float calculateAngleAddition();
         float getAngleAddition();
 
+        /* -- Ball Data Structs -- */
         BallData data;
         BallData getBallData();
 
     private:
 
+        /* -- Calculate data for ball -- */
         void calculateAngleStrength();
 
         uint16_t readValues[TSSP_NUM] = {0};
@@ -35,7 +39,7 @@ class TSSP{
         int8_t tsspAdditionA[TSSP_NUM];
         int8_t tsspAdditionB[TSSP_NUM];
 
-        float angleAddition;
+        float angleAddition; // Orbit addition angle
 
 };
 

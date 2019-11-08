@@ -24,26 +24,34 @@ class DirectionManager{
         /* -- Class Constructor + Init -- */
         DirectionManager();
 
+        /* --  -- */
         MoveData update(BallData _ballData, float _heading);
 
     private:
 
+        /* -- Calculate orbits towards ball -- */
         MoveData calculateOrbit();
         MoveData calculateOtherOrbit();
 
+        /* -- Calculate attacking move data -- */
         MoveData calculateAttack();
 
+        /* -- Calculate defending move data -- */
         MoveData calculateDefend();
 
+        /* -- Calculate how to return from line -- */
         MoveData calculateAvoidance(MoveData calcMove);
 
+        /* -- Calculate correction -- */
         MoveData calculateCorrection(MoveData calcMove);
 
+        /* -- Avoidance bounce angle -- */
         float calculateAvoianceBounce(float orbitAngle, float lineAngle);
 
-        float heading;
-        BallData ballData;
+        float heading; // IMU heading
+        BallData ballData; // Tssp ball data
 
+        /* -- Movement PIDs -- */
         PID imuPID = PID(IMU_KP, IMU_KI, IMU_KD, IMU_MAX_CORRECTION);
         PID attackGoalTrackPID = PID(ATTACK_GOAL_TRACK_KP, ATTACK_GOAL_TRACK_KI, ATTACK_GOAL_TRACK_KD, ATTACK_GOAL_TRACK_MAX_CORRECTION);
         PID defendGoalTrackPID = PID(DEFEND_GOAL_TRACK_KP, DEFEND_GOAL_TRACK_KI, DEFEND_GOAL_TRACK_KD, DEFEND_GOAL_TRACK_MAX_CORRECTION);

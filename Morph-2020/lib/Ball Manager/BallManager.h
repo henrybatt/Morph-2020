@@ -28,6 +28,7 @@ class BallManager{
         /* -- If ball is breaking lightgate -- */
         bool hasBall();
 
+         /* -- If kicker timer hasn't passed -- */       
         bool hasKicked();
 
     private:

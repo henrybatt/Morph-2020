@@ -1,11 +1,11 @@
-#include <IMU.h>
+#include <MPU.h>
 
 
-IMU imu = IMU();
+MPU mpu = MPU();
 
 
-IMU::IMU(){
-    Wire.begin();
+MPU::MPU(){
+    Wire1.begin();
     I2CwriteByte(MPU9250_ADDRESS, 29, 0x06);
     I2CwriteByte(MPU9250_ADDRESS, 26, 0x06);
     I2CwriteByte(MPU9250_ADDRESS, 27, GYRO_FULL_SCALE_1000_DPS);
@@ -17,7 +17,7 @@ IMU::IMU(){
 }
 
 
-void IMU::update(){
+void MPU::update(){
     float reading = (float)readGyroscope().z;
 
 	long currentTime = micros();
@@ -30,7 +30,7 @@ void IMU::update(){
 
 	previousTime = currentTime;
 
-    #if DEBUG_COMPASS
+    #if DEBUG_IMU
         Serial.print(heading);
         Serial.print(", ");
         Serial.println(correction);
@@ -38,7 +38,7 @@ void IMU::update(){
 }
 
 
-Vector3D IMU::readAccelerometer() {
+Vector3D MPU::readAccelerometer() {
     uint8_t buffer[14];
     I2Cread(MPU9250_ADDRESS, 0x3B, 14, buffer);
 
@@ -51,7 +51,7 @@ Vector3D IMU::readAccelerometer() {
 }
 
 
-Vector3D IMU::readGyroscope(){
+Vector3D MPU::readGyroscope(){
     uint8_t buffer[14];
     I2Cread(MPU9250_ADDRESS, 0x3B, 14, buffer);
 
@@ -64,7 +64,7 @@ Vector3D IMU::readGyroscope(){
 }
 
 
-Vector3D IMU::readMagnetometer(){
+Vector3D MPU::readMagnetometer(){
     uint8_t status1;
     do {
         I2Cread(MAG_ADDRESS, 0x02, 1, &status1);
@@ -82,13 +82,13 @@ Vector3D IMU::readMagnetometer(){
 }
 
 
-void IMU::calibrate(){
-    for (uint8_t i = 0; i < IMU_CALIBRATION_COUNT; i++) {
+void MPU::calibrate(){
+    for (uint8_t i = 0; i < MPU_CALIBRATION_COUNT; i++) {
         float readingGyro = (float)readGyroscope().z;
         calibration += readingGyro;
-        delay(IMU_CALIBRATION_TIME);
+        delay(MPU_CALIBRATION_TIME);
     }
-    calibration /= IMU_CALIBRATION_COUNT;
+    calibration /= MPU_CALIBRATION_COUNT;
     update();
     float firstVal = heading;
     delay(100);
@@ -99,18 +99,18 @@ void IMU::calibrate(){
 } 
 
 
-float IMU::convertRawAcceleration(int raw){
+float MPU::convertRawAcceleration(int raw){
     float a = (raw * 2.0) / 32768.0;
     return a;
 }
 
 
-float IMU::convertRawGyro(int raw){
+float MPU::convertRawGyro(int raw){
     float g = (raw * 1000.0) / 32768.0;
     return g;
 }
 
 
-float IMU::getHeading(){
+float MPU::getHeading(){
     return heading;
 }
