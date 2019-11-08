@@ -18,7 +18,7 @@ void BallManager::kickBall(){
 
 
 void BallManager::attackKick(){
-    if (angleIsInside(360-KICKER_GOAL_ANGLE, KICKER_GOAL_ANGLE, camera.attack.angle) && coordManager.robotPosition.j > 0){
+    if (angleIsInside(360 - KICKER_GOAL_ANGLE, KICKER_GOAL_ANGLE, camera.attack.angle) && coordManager.robotPosition.j > 0){
         kickBall();
     }
 }

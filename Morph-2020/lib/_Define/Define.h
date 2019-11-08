@@ -18,6 +18,11 @@
 #define ANGLE_DIFF_MULTIPLIER 0.15
 
 
+/* --- Acceleration --- */
+#define ACCELERATION true
+#define MAX_ACCELERATION 0.5
+
+
 /* --- Out Avoidance --- */
 #define AVOID_RETURN_SPEED 60 // Speed if over line
 #define AVOID_BOUNCE_SPEED 40 // Speed to bounce towards ball

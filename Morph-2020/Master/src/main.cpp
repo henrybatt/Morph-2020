@@ -11,6 +11,7 @@
 #include <DirectionManager.h>
 #include <MotorController.h>
 
+#include <MoveData.h>
 #include <Timer.h>
 
 Timer BTSendTimer = Timer(BT_UPDATE_TIME);
@@ -34,7 +35,9 @@ void loop() {
         roleManager.update();
     }
 
-    motors.update(directionManager.update(tssps.getBallData(), imu.getHeading()));
+    MoveData movement = directionManager.update(tssps.getBallData(), imu.getHeading());
+
+    motors.update(movement);
 
     roleManager.roleLED();
 
@@ -45,14 +48,14 @@ void loop() {
 
 
 /*
-BallData ballInfo;
 
 void orbit(){
 
     float angle;
+    float strength
 
-    float strengthModifier = (((float)ballInfo.strength - (float)BALL_FAR_STRENGTH) / ((float)BALL_CLOSE_STRENGTH - (float)BALL_FAR_STRENGTH));
-    float value = ballInfo.angle > 180 ? ballInfo.angle - 360 : ballInfo.angle;
+    float strengthModifier = (((float)strength - (float)BALL_FAR_STRENGTH) / ((float)BALL_CLOSE_STRENGTH - (float)BALL_FAR_STRENGTH));
+    float value = angle > 180 ? angle - 360 : angle;
     float angleAddition = angleIsInside(325, 35, angle) ? (value * 1.1 * strengthModifier) : findSign(value) * (90 * strengthModifier);
 
     float moveAngle = angle + angleAddition;

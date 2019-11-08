@@ -17,7 +17,12 @@ void MotorController::update(MoveData movement){
 
     if (movement.speed != 0){
 
-        for(uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] = cosf(toRadians(motorAngle[i] + 90 - movement.angle));         
+
+        #if ACCELERATION
+            calculateAcceleration(&movement);
+        #endif
+
+        for (uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] = cosf(toRadians(motorAngle[i] + 90 - movement.angle));
 
         float maxVal = fmax(fmax(fmax(abs(speeds[0]), abs(speeds[1])), abs(speeds[2])), abs(speeds[3]));
         for(uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] = round(speeds[i] * (movement.speed / maxVal)) + movement.correction; 
@@ -51,4 +56,12 @@ void MotorController::move(){
         digitalWrite(in2[i], in2Write);
         analogWrite(ena[i], enaWrite);
     }
+}
+
+
+void MotorController::calculateAcceleration(MoveData *movement){
+    Vector optimal = Vector(movement->angle, MAX_ACCELERATION * movement->speed / 100, false);
+    Vector output = currentAcceleration + optimal;
+    currentAcceleration = output * (1 - MAX_ACCELERATION);
+    *movement = MoveData(output.arg, output.mag * 100);
 }

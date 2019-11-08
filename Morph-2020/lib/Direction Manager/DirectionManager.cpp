@@ -107,6 +107,7 @@ MoveData DirectionManager::calculateAvoidance(MoveData calcMove){
                 }
             }
         }
+        return MoveData(returnAngle, AVOID_OTHER_SPEED); // Somehow there was an error, just move off line
     }
     return calcMove;
 }

@@ -5,6 +5,7 @@
 #include <Common.h>
 
 #include <MoveData.h>
+#include <Vector.h>
 
 class MotorController{
 
@@ -19,6 +20,8 @@ class MotorController{
 
         void move();
 
+        void calculateAcceleration(MoveData *movement);
+
         uint8_t ena[MOTOR_NUM] = {MOTOR_FRONT_RIGHT_ENA, MOTOR_BACK_RIGHT_ENA, MOTOR_BACK_LEFT_ENA, MOTOR_FRONT_LEFT_ENA};
         uint8_t in1[MOTOR_NUM] = {MOTOR_FRONT_RIGHT_IN1, MOTOR_BACK_RIGHT_IN1, MOTOR_BACK_LEFT_IN1, MOTOR_FRONT_LEFT_IN1};
         uint8_t in2[MOTOR_NUM] = {MOTOR_FRONT_RIGHT_IN2, MOTOR_BACK_RIGHT_IN2, MOTOR_BACK_LEFT_IN2, MOTOR_FRONT_LEFT_IN2};
@@ -26,7 +29,8 @@ class MotorController{
         bool reversed[MOTOR_NUM] = {MOTOR_FRONT_RIGHT_REVERSED, MOTOR_BACK_RIGHT_REVERSED, MOTOR_BACK_LEFT_REVERSED, MOTOR_FRONT_LEFT_REVERSED};
 
         float speeds[MOTOR_NUM] = {0};
-    
+
+        Vector currentAcceleration;
 };
 
 extern MotorController motors;
