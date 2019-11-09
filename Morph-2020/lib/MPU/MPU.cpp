@@ -30,11 +30,11 @@ void MPU::update(){
 
 	previousTime = currentTime;
 
-    #if DEBUG_IMU
-        Serial.print(heading);
-        Serial.print(", ");
-        Serial.println(correction);
-    #endif
+    // #if DEBUG_IMU
+    //     Serial.print(heading);
+    //     Serial.print(", ");
+    //     Serial.println(correction);
+    // #endif
 }
 
 

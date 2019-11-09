@@ -115,11 +115,11 @@ MoveData DirectionManager::calculateAvoidance(MoveData calcMove){
 
 MoveData DirectionManager::calculateCorrection(MoveData calcMove){
     if (roleManager.getRole() == Role::attack && camera.attack.face){
-        calcMove.correction = -attackGoalTrackPID.update((camera.attack.angle > 180 ? camera.attack.angle - 360 : camera.attack.angle), 0);
+        calcMove.correction = -attackGoalTrackPID.update((mod(camera.attack.angle + 180, 360) - 180), 0);
     } else if (roleManager.getRole() == Role::defend && camera.defend.face){
-        calcMove.correction = -defendGoalTrackPID.update((camera.defend.angle > 180 ? camera.defend.angle - 360 : camera.defend.angle), 180);
+        calcMove.correction = -defendGoalTrackPID.update((mod(camera.defend.angle + 180, 360) - 180), 180);
     } else {
-        calcMove.correction = imuPID.update((heading > 180 ? heading - 360 : heading), 0);
+        calcMove.correction = imuPID.update((mod(heading + 180, 360) - 180), 0);
     }
     return calcMove;
 }
@@ -138,6 +138,12 @@ MoveData DirectionManager::calculateOrbit(){
     } else {
         calcMove.speed = ORBIT_SLOW_SPEED + (ORBIT_FAST_SPEED - ORBIT_SLOW_SPEED) * (1.0 - abs(tssps.getAngleAddition()) / 90.0);
     }
+
+    #if DEBUG_ORBIT
+        Serial.printf("Orbit Data:\tAngle: %i,\t Speed: %i,\t Angle Addition: %f \n", calcMove.angle, calcMove.speed, tssps.getAngleAddition());
+    #endif
+
+
 
     return calcMove;
 }

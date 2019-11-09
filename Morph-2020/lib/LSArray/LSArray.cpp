@@ -60,7 +60,21 @@ void LSArray::update(float _heading){
                 onWhite[i] = true;
             }
         }
+        #if DEBUG_LIGHT
+            if (i == 0){
+                Serial.print("Light Data:\t");
+            }
+            Serial.print(onWhite[i]);
+            if ( i != LS_NUM - 1){
+                Serial.print(" ");
+            } else{
+                Serial.println();
+                delay(10);
+            }
+        #endif
     } 
+
+   
 
     calculateClusters();
     calculateLine();
@@ -142,9 +156,7 @@ void LSArray::calculateLine(){
     }
 
     #if DEBUG_LINE
-        Serial.print(angle);
-        Serial.print(" , ");
-        Serial.println(size);
+        Serial.printf("Line Data:\tAngle: %i,\tSize: %f \n", angle, size);
     #endif
 }
 
@@ -189,6 +201,11 @@ void LSArray::calculateAvoidanceData(){
             }
         }
     }
+
+    #if DEBUG_AVOIDANCE
+        Serial.printf("Avoid Data:\tAngle: %i,\tState: %f \n", data.angle, data.state);
+    #endif
+
 }
 
 

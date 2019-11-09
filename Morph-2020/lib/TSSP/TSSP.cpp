@@ -27,12 +27,15 @@ void TSSP::update(){
     }
 
     for (uint8_t i = 0; i < TSSP_NUM; i++){
-        values[i] = readValues[i] == 0 ? 0 : 100 * readValues[i]/255 + tsspAddition[i];
+        values[i] = readValues[i] == 0 ? 0 : 100 * readValues[i] / TSSP_READ_NUM + tsspAddition[i];
         readValues[i] = 0;
         sortedValues[i] = 0;
         indexes[i] = 0;
 
         #if DEBUG_TSSP
+            if (i == 0){
+                Serial.print("TSSP Data:\t");
+            }
             Serial.print(values[i]);
             if (i != TSSP_NUM - 1){
                 Serial.print("\t");
@@ -65,7 +68,7 @@ void TSSP::calculateAngleStrength(){
     int16_t x = 0;
     int16_t y = 0;
 
-    for (uint8_t i = 0; i < 4; i++){
+    for (uint8_t i = 0; i < 5; i++){
         x += sortedValues[i] * cos(toRadians(indexes[i] * TSSP_NUM_MULTIPLIER));
         y += sortedValues[i] * sin(toRadians(indexes[i] * TSSP_NUM_MULTIPLIER));
     }
@@ -74,9 +77,7 @@ void TSSP::calculateAngleStrength(){
     data.angle = data.strength != 0 ? floatMod(toDegrees(atan2(y, x)), 360) : TSSP_NO_BALL_ANGLE;
 
     #if DEBUG_BALL_DATA
-        Serial.print(data.angle);
-        Serial.print("\t");
-        Serial.println(data.strength);
+        Serial.printf("Ball Data:\tAngle: %i,\t Strength: %i \n", data.angle, data.strength);
     #endif
 
 }

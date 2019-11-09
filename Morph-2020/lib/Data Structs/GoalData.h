@@ -8,12 +8,12 @@ class GoalData{
 
     public: 
         uint16_t angle;
-        uint8_t distance;
+        uint16_t distance;
         bool face;
 
         GoalData(){
             angle = -1;
-            distance = 0;
+            distance = -1;
         }
 
         GoalData(uint16_t angle, uint16_t distance) : angle(angle), distance(distance) {}

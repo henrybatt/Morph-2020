@@ -20,7 +20,7 @@ void setup() {}
 
 
 void loop() {
-    
+
     // Update data
     bnoWrapper.update();
     lightArray.update(bnoWrapper.getHeading());
@@ -38,11 +38,7 @@ void loop() {
         roleManager.update();
     }
 
-    if (true){ // If touchscreen button enabled
-        motors.update(directionManager.update(tssps.getBallData(), bnoWrapper.getHeading()));
-    } else {
-        motors.update(MoveData(0, 0, 0));
-    }
+    motors.update(true ? directionManager.update(tssps.getBallData(), bnoWrapper.getHeading()) : MoveData(0, 0, 0));
 
     roleManager.roleLED();
 

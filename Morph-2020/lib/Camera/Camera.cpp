@@ -33,19 +33,11 @@ void Camera::read(){
 void Camera::update(){
     read();
     goalTrack();
+    
     #if DEBUG_CAMERA
-        Serial.print("Attack Angle: ");
-        Serial.print(attack.angle);
-        Serial.print(", Attack distance: ");
-        Serial.print(attack.distance);
-        Serial.print(", Attack visible: ");
-        Serial.print(attack.visible);
-        Serial.print(", Defend Angle: ");
-        Serial.print(defend.angle);
-        Serial.print(", Defend distance: ");
-        Serial.print(defend.distance);
-        Serial.print(", Defend visible: ");
-        Serial.println(defend.visible);
+        Serial.print("Camera Data:\t");
+        Serial.printf("Attack Angle: %i,\t Attack Distance: %i,\t Attack Visible: %i,\t", attack.angle, attack.distance, attack.visible());
+        Serial.printf("Defend Angle: %i,\t Defend Distance: %i,\t Defend Visible: %i \n", defend.angle, defend.distance, defend.visible());
     #endif
 
 }

@@ -31,6 +31,11 @@ void BNO055Wrapper::update(){
         bno055_convert_float_euler_h_deg(&heading);
     #endif
 
+    #if DEBUG_IMU
+        Serial.printf("IMU:\tHeading: %i \n", heading);
+    #endif
+
+
 }
 
 

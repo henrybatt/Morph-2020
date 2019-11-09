@@ -158,6 +158,6 @@
 #define BALL_OUT_COORD_X 0
 #define BALL_OUT_COORD_Y -30
 
-#define NEW_COORD_TIMER 500000
+#define NEW_COORD_TIMER 250000
 
 #endif
