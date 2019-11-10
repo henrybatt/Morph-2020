@@ -78,7 +78,6 @@ void LSArray::update(float _heading){
 
     calculateClusters();
     calculateLine();
-    calculateAvoidanceData();
 }
 
 
@@ -161,10 +160,10 @@ void LSArray::calculateLine(){
 }
 
 
-void LSArray::calculateAvoidanceData(){
+void LSArray::calculateAvoidanceData(LineData lightData){
 
-    bool onLine = (angle != NO_LINE_ANGLE);
-    float lineAngle = onLine ? floatMod(angle + heading, 360) : NO_LINE_ANGLE;
+    bool onLine = (lightData.angle != NO_LINE_ANGLE);
+    float lineAngle = onLine ? floatMod(lightData.angle + heading, 360) : NO_LINE_ANGLE;
 
     if (onLine){
         // Seeing line determine how to return
@@ -173,7 +172,7 @@ void LSArray::calculateAvoidanceData(){
             data = LineData(lineAngle, 1);
 
         } else {
-            if (data.state == 3){
+            if (data.size == 3){
                 // Outside of line but just started touching
                 data = LineData(floatMod(lineAngle + 180, 360), 2);
 
@@ -192,18 +191,18 @@ void LSArray::calculateAvoidanceData(){
     } else {
         if (!data.onField()){
             // No line but recently on
-            if (data.state <= 1){
+            if (data.size <= 1){
                 // Was inside line, returned to field
-                data = LineData(NO_LINE_ANGLE, NO_LINE_STATE);
+                data = LineData(NO_LINE_ANGLE, NO_LINE_SIZE);
             } else {
                 // Was outside line, now over
-                data.state = 3;
+                data.size = 3;
             }
         }
     }
 
     #if DEBUG_AVOIDANCE
-        Serial.printf("Avoid Data:\tAngle: %i,\tState: %f \n", data.angle, data.state);
+        Serial.printf("Avoid Data:\t Angle: %i,\t Size: %f \n", data.angle, data.size);
     #endif
 
 }
@@ -232,11 +231,11 @@ bool LSArray::isOutsideLine(float angle){
 }
 
 
-float LSArray::getLineAngle(){
-    return angle;
+LineData LSArray::getLineData(){
+    return LineData(angle, size);
 }
 
 
-LineData LSArray::getLineData(){
+LineData LSArray::getAvoidData(){
     return data;
 }

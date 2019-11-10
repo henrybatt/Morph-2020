@@ -74,13 +74,13 @@ MoveData DirectionManager::calculateDefend(){
 
 
 MoveData DirectionManager::calculateAvoidance(MoveData calcMove){
-    LineData lineData = lightArray.getLineData(); 
+    LineData lineData = lightArray.getAvoidData(); 
 
     float returnAngle = floatMod(lineData.angle + 180 - heading, 360);
 
     if (!lineData.onField()){
         // Not on the field, calculate return
-        if (lineData.state >= 2){
+        if (lineData.size >= 2){
             // Over other side of the line, move back across
             return MoveData(returnAngle, AVOID_RETURN_SPEED);
 

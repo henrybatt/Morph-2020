@@ -11,28 +11,28 @@
 struct LineData{
 
     float angle;
-    uint8_t state;
+    float size;
 
     LineData(){
         angle = NO_LINE_ANGLE;
-        state = NO_LINE_STATE;
+        size = NO_LINE_SIZE;
     }
 
-    LineData(float angle, uint8_t state) : angle(angle), state(state) {}
+    LineData(float angle, float size) : angle(angle), size(size) {}
 
     /* -- Robot is on field -- */
     bool onField(){
-        return state == 0;
+        return size == 0;
     }
 
 
     /* -- Operators -- */
     bool operator == (LineData line2){
-        return angle == line2.angle && state == line2.state;
+        return angle == line2.angle && size == line2.size;
     }
 
     bool operator != (LineData line2){
-        return angle != line2.angle || state != line2.state;
+        return angle != line2.angle || size != line2.size;
     }
 
 };

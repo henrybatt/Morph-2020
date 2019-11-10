@@ -19,11 +19,13 @@ class LSArray {
         /* -- Calculate if ball is outside off line based off line angle and current orbit -- */
         bool isOutsideLine(float angle);
 
-        /* -- Return line angle -- */
-        float getLineAngle();
+        void calculateAvoidanceData(LineData lightData);
+
+        /* -- Return line data -- */
+        LineData getLineData();
 
         /* -- Return Line Data -- */
-        LineData getLineData();
+        LineData getAvoidData();
 
     private:
 
@@ -38,9 +40,6 @@ class LSArray {
 
         /* -- Calculate light sensor clusters -- */
         void calculateClusters();
-
-
-        void calculateAvoidanceData();
 
         /* -- Structure of line data -- */
         LineData data;

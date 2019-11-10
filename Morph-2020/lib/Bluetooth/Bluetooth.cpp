@@ -38,7 +38,7 @@ void Bluetooth::send(){
     BTSerial.write(thisData.ballData.isOut);
 
     // on Field
-    BTSerial.write(thisData.lineData.state);
+    BTSerial.write(!thisData.lineData.onField());
 
     // Role
     BTSerial.write(thisData.role);
