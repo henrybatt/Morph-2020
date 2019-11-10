@@ -164,27 +164,28 @@ void LSArray::calculateAvoidanceData(LineData lightData){
 
     bool onLine = (lightData.angle != NO_LINE_ANGLE);
     float lineAngle = onLine ? floatMod(lightData.angle + heading, 360) : NO_LINE_ANGLE;
+    float lineSize = onLine ? lightData.size : NO_LINE_SIZE;
 
     if (onLine){
         // Seeing line determine how to return
         if (data.onField()){
             // Just saw line, save data
-            data = LineData(lineAngle, 1);
+            data = LineData(lineAngle, lineSize);
 
         } else {
             if (data.size == 3){
                 // Outside of line but just started touching
-                data = LineData(floatMod(lineAngle + 180, 360), 2);
+                data = LineData(floatMod(lineAngle + 180, 360), 2 - lineSize);
 
             } else {
                 // Still on line, decide what side
                 if (smallestAngleBetween(data.angle, lineAngle) <= 90){
                     // Angles between 90 degrees, inside of field, save new angle
-                    data = LineData(lineAngle, 1);
+                    data = LineData(lineAngle, lineSize);
 
                 } else {
                     // Angle changed by more than 90 degrees, outside of field, modify angle
-                    data = LineData(floatMod(lineAngle + 180, 360), 2);
+                    data = LineData(floatMod(lineAngle + 180, 360), 2 - lineSize);
                 }
             }
         }

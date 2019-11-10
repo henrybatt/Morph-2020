@@ -25,9 +25,14 @@
 
 
 /* --- Out Avoidance --- */
-#define AVOID_RETURN_SPEED 60 // Speed if over line
-#define AVOID_BOUNCE_SPEED 40 // Speed to bounce towards ball
-#define AVOID_OTHER_SPEED 20 // Speed if not bounce
+#define LINE_SIZE_BIG 1 // If line size bigger than move back into field
+#define LINE_SIZE_MEDIUM 0.5 // If line size bigger than this decide bounce
+#define LINE_SIZE_SMALL 0.1 // If line size bigger than this sit on line
+
+#define AVOID_OVER_SPEED 90
+#define AVOID_SPEED 40 // Modular speed to cross over line (1 times min, half max)
+#define AVOID_BOUNCE_SPEED 40 // Modular speed to bounce over line (2 times min, 1 max)
+
 #define AVOID_NORMAL_ANGLE 60 // Angle to move straight towards ball
 #define AVOID_BOUNCE_ANGLE 150 // Angle to bounce
 #define LINE_CORNER_ANGLE_THRESHOLD 30 // If angle mod 90 greater than value and less than 90 - value, must be on corner
