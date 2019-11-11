@@ -4,9 +4,7 @@
 DirectionManager directionManager = DirectionManager();
 
 
-DirectionManager::DirectionManager(){
-
-}
+DirectionManager::DirectionManager(){}
 
 
 MoveData DirectionManager::update(BallData _ballData, float _heading){
@@ -23,6 +21,7 @@ MoveData DirectionManager::update(BallData _ballData, float _heading){
 
 
 MoveData DirectionManager::calculateAttack(){
+
     if (bluetooth.otherData.ballData.isOut){
         // Defender see's ball isOut, move to centre of field
         camera.attack.face = false;
@@ -37,10 +36,14 @@ MoveData DirectionManager::calculateAttack(){
         camera.attack.face = false;
         return calculateOtherOrbit();
 
-    } else {
+    } else if (camera.goalVisible()){
         // No ball, move to the centre
         camera.attack.face = false;
         return coordManager.moveToCoord(Vector(NO_BALL_COORD_X, NO_BALL_COORD_Y));
+        
+    } else {
+        // No ball or coords, stop
+        return MoveData(-1, 0);
     }
 
 }
@@ -80,7 +83,7 @@ MoveData DirectionManager::calculateAvoidance(MoveData calcMove){
 
     if (!lineData.onField()){
         // Not on the field, calculate return
-        if (lineData.size > LINE_SIZE_BIG){
+        if ((lineData.size > LINE_SIZE_BIG) || (!ballData.visible() && lineData.size > LINE_SIZE_MEDIUM)){
             // Over other side of the line, move back across
             return MoveData(returnAngle, (lineData.size == 3 ? AVOID_OVER_SPEED : lineData.size * AVOID_SPEED));
 
@@ -89,20 +92,15 @@ MoveData DirectionManager::calculateAvoidance(MoveData calcMove){
 
             if (lineData.size > LINE_SIZE_SMALL && lightArray.isOutsideLine(calcMove.angle)){
                 // Ball is outside line, stop
-                return MoveData(-1, 0);
+                if (lightArray.isOutsideLine(ballData.angle)){
+                    return MoveData(-1, 0);
+                } else {
+                    return calculateAvoianceBounce(calcMove, returnAngle, lineData.size);
+                }
 
             } else if(lineData.size > LINE_SIZE_MEDIUM){
                 // Ball is inside field
-                if (smallestAngleBetween(calcMove.angle, returnAngle) < AVOID_BOUNCE_ANGLE){
-                // If ball is within boucing angles decide if to move direct or bounce
-                    if (smallestAngleBetween(calcMove.angle, returnAngle) < AVOID_NORMAL_ANGLE){
-                        // Withing direct return angle
-                        return calcMove;
-                    }else{
-                        // Bounce towards ball
-                        return MoveData(calculateAvoianceBounce(calcMove.angle, returnAngle), lineData.size * AVOID_BOUNCE_SPEED);
-                    }
-                }
+                return calculateAvoianceBounce(calcMove, returnAngle, lineData.size);
             }
         }
     }
@@ -116,7 +114,7 @@ MoveData DirectionManager::calculateCorrection(MoveData calcMove){
     } else if (roleManager.getRole() == Role::defend && camera.defend.face){
         calcMove.correction = -defendGoalTrackPID.update((mod(camera.defend.angle + 180, 360) - 180), 180);
     } else {
-        calcMove.correction = imuPID.update((mod(heading + 180, 360) - 180), 0);
+        calcMove.correction = round(imuPID.update((mod(heading + 180, 360) - 180), 0));
     }
     return calcMove;
 }
@@ -157,7 +155,24 @@ MoveData DirectionManager::calculateOtherOrbit(){
 }
 
 
-float DirectionManager::calculateAvoianceBounce(float orbitAngle, float lineAngle){
+MoveData DirectionManager::calculateAvoianceBounce(MoveData calcMove, float returnAngle, float lineSize){
+
+    if (smallestAngleBetween(calcMove.angle, returnAngle) < AVOID_BOUNCE_ANGLE){
+    // If ball is within boucing angles decide if to move direct or bounce
+        if (smallestAngleBetween(calcMove.angle, returnAngle) < AVOID_NORMAL_ANGLE){
+            // Withing direct return angle
+            return calcMove;
+        }else{
+            // Bounce towards ball
+            return MoveData(calculateAvoianceBounceAngle(calcMove.angle, returnAngle), lineSize * AVOID_BOUNCE_SPEED);
+        }
+    }
+    return calcMove;
+
+}
+
+
+float DirectionManager::calculateAvoianceBounceAngle(float orbitAngle, float lineAngle){
     return ((floatMod(lineAngle + 180 - orbitAngle, 360)) > 0 && (floatMod(lineAngle + 180 - orbitAngle, 360)) < 180) 
                 ? floatMod(lineAngle + 60, 360) : floatMod(lineAngle - 60, 360);
 }

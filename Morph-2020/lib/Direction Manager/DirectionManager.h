@@ -45,8 +45,11 @@ class DirectionManager{
         /* -- Calculate correction -- */
         MoveData calculateCorrection(MoveData calcMove);
 
+        /* -- Calculate Avoidance Bounce -- */
+        MoveData calculateAvoianceBounce(MoveData calcMove, float returnAngle, float lineSize);
+
         /* -- Avoidance bounce angle -- */
-        float calculateAvoianceBounce(float orbitAngle, float lineAngle);
+        float calculateAvoianceBounceAngle(float orbitAngle, float lineAngle);
 
         float heading; // IMU heading
         BallData ballData; // Tssp ball data

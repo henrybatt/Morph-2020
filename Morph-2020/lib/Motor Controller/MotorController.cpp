@@ -15,6 +15,11 @@ MotorController::MotorController(){
 
 void MotorController::update(MoveData movement){
 
+    #if DEBUG_MOVEMENT
+        Serial.printf("Movement Debug: \t Angle: %i \t Speed: %i \t Correction: %i \n", movement.angle, movement.speed, movement.correction);
+    #endif
+
+
     if (movement.speed != 0){
 
         #if ACCELERATION
@@ -24,10 +29,10 @@ void MotorController::update(MoveData movement){
         for (uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] = cosf(toRadians(motorAngle[i] + 90 - movement.angle));
 
         float maxVal = fmax(fmax(fmax(abs(speeds[0]), abs(speeds[1])), abs(speeds[2])), abs(speeds[3]));
-        for(uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] = round(speeds[i] * (movement.speed / maxVal)) + movement.correction; 
+        for(uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] = round(speeds[i] * movement.speed / maxVal) + movement.correction; 
 
         maxVal = fmax(fmax(fmax(abs(speeds[0]), abs(speeds[1])), abs(speeds[2])), abs(speeds[3]));
-        for(uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] = round(speeds[i] * (movement.speed / maxVal));
+        for(uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] = round(speeds[i] * movement.speed / maxVal);
             
     } else {
         for(uint8_t i = 0; i < MOTOR_NUM; i++) speeds[i] = movement.correction;

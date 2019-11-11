@@ -5,11 +5,11 @@
 
 #define ROBOT 1
 
-#define CAMERA true
-#define SWITCHING true
+#define CAMERA false
+#define SWITCHING false
 
-#define ACCELERATION true
-#define MPU_OVERRIDE false
+#define ACCELERATION false
+#define MPU_OVERRIDE true
 
 /* --- Orbit --- */
 #define ORBIT_SURGE_SPEED 80
@@ -17,7 +17,7 @@
 #define ORBIT_SLOW_SPEED 40 // Horizontal movement
 #define BALL_CLOSE_STRENGTH 155
 #define BALL_FAR_STRENGTH 0
-#define ANGLE_DIFF_MULTIPLIER 0.15
+#define ANGLE_DIFF_MULTIPLIER 0.25
 
 
 /* --- Acceleration --- */
@@ -25,18 +25,18 @@
 
 
 /* --- Out Avoidance --- */
-#define LINE_SIZE_BIG 1 // If line size bigger than move back into field
-#define LINE_SIZE_MEDIUM 0.5 // If line size bigger than this decide bounce
+#define LINE_SIZE_BIG 0.7 // If line size bigger than move back into field
+#define LINE_SIZE_MEDIUM 0.4 // If line size bigger than this decide bounce
 #define LINE_SIZE_SMALL 0.1 // If line size bigger than this sit on line
 
 #define AVOID_OVER_SPEED 90
-#define AVOID_SPEED 40 // Modular speed to cross over line (1 times min, half max)
+#define AVOID_SPEED 50 // Modular speed to cross over line (1 times min, half max)
 #define AVOID_BOUNCE_SPEED 40 // Modular speed to bounce over line (2 times min, 1 max)
 
 #define AVOID_NORMAL_ANGLE 60 // Angle to move straight towards ball
 #define AVOID_BOUNCE_ANGLE 150 // Angle to bounce
 #define LINE_CORNER_ANGLE_THRESHOLD 30 // If angle mod 90 greater than value and less than 90 - value, must be on corner
-#define LINE_BUFFER -10 // If orbit angle within line angle and buffer, must want to move outside line
+#define LINE_BUFFER -10 //-10 // If orbit angle within line angle and buffer, must want to move outside line
 #define LINE_BUFFER_CORNER -10 // ^
 
 
@@ -164,5 +164,47 @@
 #define BALL_OUT_COORD_Y -30
 
 #define NEW_COORD_TIMER 250000
+
+
+/* --- Screen --- */
+
+// TS Values
+#define TS_MINX 150
+#define TS_MINY 130
+#define TS_MAXX 3800
+#define TS_MAXY 4000
+
+// Min and max pressure values to be considered a touch
+#define MIN_PRESSURE 100
+#define MAX_PRESSURE 1300
+
+// Common colours as hex values
+#define BLACK 0x0000
+#define NAVY 0x000F
+#define DARKGREEN 0x03E0
+#define DARKCYAN 0x03EF
+#define MAROON 0x7800
+#define PURPLE 0x780F
+#define OLIVE 0x7BE0
+#define LIGHTGREY 0xC618
+#define DARKGREY 0x7BEF
+#define BLUE 0x001F
+#define GREEN 0x07E0
+#define CYAN 0x07FF
+#define RED 0xF800
+#define MAGENTA 0xF81F
+#define YELLOW 0xFFE0
+#define WHITE 0xFFFF
+#define ORANGE 0xFD20
+#define GREENYELLOW 0xAFE5
+#define PINK 0xF81F
+#define DIMGREY 0x6B4D
+#define DEEPBLUE 0x000B
+
+#define BACKGROUND_COLOUR BLACK
+#define FOREGROUND_COLOUR LIGHTGREY
+#define HIGHLIGHT_COLOUR BLUE
+
+#define TFT_ROTATION 1
 
 #endif

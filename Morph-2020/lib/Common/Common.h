@@ -57,9 +57,9 @@ struct Vector3D {
 
 /* --- PID --- */
 
-#define IMU_KP 2.2
+#define IMU_KP 1
 #define IMU_KI 0
-#define IMU_KD 0.22
+#define IMU_KD 0.1
 #define IMU_MAX_CORRECTION 100
 
 #define ATTACK_GOAL_TRACK_KP 0

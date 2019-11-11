@@ -32,6 +32,7 @@ void BallManager::kick(){
 
 
 bool BallManager::hasBall(){
+    // return digitalReadFast(LIGHTGATE_PIN);
     return (analogRead(LIGHTGATE_PIN) < LIGHTGATE_THRESHOLD);
 }
 

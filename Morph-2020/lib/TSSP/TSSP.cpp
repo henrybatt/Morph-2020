@@ -85,9 +85,9 @@ void TSSP::calculateAngleStrength(){
 
 float TSSP::calculateAngleAddition(){
     float value = data.angle > 180 ? data.angle - 360 : data.angle;
-    float ballAngleDifference = findSign(value) * fmin(90, 0.4 * pow(MATH_E, ANGLE_DIFF_MULTIPLIER * smallestAngleBetween(data.angle, 0)));
+    float ballAngleDifference = findSign(value) * fmin(90, 0.4 * expf(ANGLE_DIFF_MULTIPLIER * smallestAngleBetween(data.angle, 0)));
     float strengthFactor = constrain(((float)data.strength - (float)BALL_FAR_STRENGTH) / ((float)BALL_CLOSE_STRENGTH - (float)BALL_FAR_STRENGTH), 0, 1);
-    float distanceMultiplier = constrain((0.02 * strengthFactor * pow(MATH_E, 4.5 * strengthFactor)), 0.1, 1);
+    float distanceMultiplier = constrain((0.02 * strengthFactor * expf( 4.5 * strengthFactor)), 0, 1);
     angleAddition = ballAngleDifference * distanceMultiplier;
     return angleAddition;
 }
