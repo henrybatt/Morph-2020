@@ -15,10 +15,6 @@ class TSSP{
         /* -- Update all data -- */
         void update();
 
-        /* -- Calculate orbit -- */
-        float calculateAngleAddition();
-        float getAngleAddition();
-
         /* -- Ball Data Structs -- */
         BallData data;
         BallData getBallData();

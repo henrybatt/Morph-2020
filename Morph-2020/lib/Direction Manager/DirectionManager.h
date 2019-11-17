@@ -4,16 +4,17 @@
 #include <Arduino.h>
 #include <Common.h>
 
-#include <TSSP.h>
-#include <LSArray.h>
 #include <Camera.h>
 #include <RoleManager.h>
 #include <Bluetooth.h>
 #include <BallManager.h>
 #include <CoordinateManager.h>
+#include <Avoidance.h>
 
 #include <LineData.h>
 #include <MoveData.h>
+
+#include <BluetoothData.h>
 
 #include <PID.h>
 
@@ -25,7 +26,14 @@ class DirectionManager{
         DirectionManager();
 
         /* --  -- */
-        MoveData update(BallData _ballData, float _heading);
+        void updateData(BallData _ballData, LineData _lightData, float _heading);
+
+        /* --  -- */
+        MoveData update();
+
+        /* --  -- */
+        BluetoothData packageBluetooth();
+
 
     private:
 
@@ -39,20 +47,13 @@ class DirectionManager{
         /* -- Calculate defending move data -- */
         MoveData calculateDefend();
 
-        /* -- Calculate how to return from line -- */
-        MoveData calculateAvoidance(MoveData calcMove);
-
         /* -- Calculate correction -- */
         MoveData calculateCorrection(MoveData calcMove);
 
-        /* -- Calculate Avoidance Bounce -- */
-        MoveData calculateAvoianceBounce(MoveData calcMove, float returnAngle, float lineSize);
-
-        /* -- Avoidance bounce angle -- */
-        float calculateAvoianceBounceAngle(float orbitAngle, float lineAngle);
 
         float heading; // IMU heading
         BallData ballData; // Tssp ball data
+        Role role;
 
         /* -- Movement PIDs -- */
         PID imuPID = PID(IMU_KP, IMU_KI, IMU_KD, IMU_MAX_CORRECTION);
