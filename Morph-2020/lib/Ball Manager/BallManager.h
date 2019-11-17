@@ -34,7 +34,7 @@ class BallManager{
     private:
 
         /* -- Kicker Timers -- */
-        Timer kickerCharge = Timer(KICKER_DISCHARGE_TIME);
+        Timer kickDischarge = Timer(KICKER_DISCHARGE_TIME);
         Timer lastKick = Timer(KICKER_LAST_TIMER);
 };
 

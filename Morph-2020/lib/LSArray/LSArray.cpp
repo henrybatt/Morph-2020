@@ -160,7 +160,83 @@ void LSArray::calculateLine(){
 }
 
 
+void LSArray::calculateAvoidanceData(LineData lightData){
+
+    bool onLine = (lightData.angle != NO_LINE_ANGLE);
+    float lineAngle = onLine ? floatMod(lightData.angle + heading, 360) : NO_LINE_ANGLE;
+    float lineSize = onLine ? lightData.size : NO_LINE_SIZE;
+
+    if (onLine){
+        // Seeing line determine how to return
+        if (data.onField()){
+            // Just saw line, save data
+            data = LineData(lineAngle, lineSize);
+
+        } else {
+            if (data.size == 3){
+                // Outside of line but just started touching
+                data = LineData(floatMod(lineAngle + 180, 360), 2 - lineSize);
+
+            } else {
+                // Still on line, decide what side
+                if (smallestAngleBetween(data.angle, lineAngle) <= 90){
+                    // Angles between 90 degrees, inside of field, save new angle
+                    data = LineData(lineAngle, lineSize);
+
+                } else {
+                    // Angle changed by more than 90 degrees, outside of field, modify angle
+                    data = LineData(floatMod(lineAngle + 180, 360), 2 - lineSize);
+                }
+            }
+        }
+    } else {
+        if (!data.onField()){
+            // No line but recently on
+            if (data.size <= 1){
+                // Was inside line, returned to field
+                data = LineData(NO_LINE_ANGLE, NO_LINE_SIZE);
+            } else {
+                // Was outside line, now over
+                data.size = 3;
+            }
+        }
+    }
+
+    #if DEBUG_AVOIDANCE
+        Serial.printf("Avoid Data:\t Angle: %i,\t Size: %f \n", data.angle, data.size);
+    #endif
+
+}
+
+
+bool LSArray::isOutsideLine(float angle){
+    
+    if (!data.onField()){
+
+        if (floatMod(data.angle, 90) > LINE_CORNER_ANGLE_THRESHOLD && floatMod(data.angle, 90) > 90 - LINE_CORNER_ANGLE_THRESHOLD){
+            // Must be on a corner if mod of angle greater than value line curves
+
+            // If orbit angle and line angle between 90 or 180 respectively must be trying to move out
+            return (angleIsInside(floatMod(data.angle - 135 - LINE_BUFFER_CORNER, 360), floatMod(data.angle + 135 + LINE_BUFFER_CORNER, 360), floatMod(angle + heading, 360)));
+        
+        } else {
+            // On side of line
+            return (angleIsInside(floatMod(data.angle - 90 - LINE_BUFFER, 360), floatMod(data.angle + 135 + LINE_BUFFER, 360), floatMod(angle + heading, 360)));
+        }
+    }
+
+    return false;
+
+
+
+}
+
+
 LineData LSArray::getLineData(){
     return LineData(angle, size);
 }
 
+
+LineData LSArray::getAvoidData(){
+    return data;
+}

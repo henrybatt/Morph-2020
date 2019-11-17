@@ -18,7 +18,6 @@
 #define BALL_CLOSE_STRENGTH 155
 #define BALL_FAR_STRENGTH 0
 #define ANGLE_DIFF_MULTIPLIER 0.25
-#define DIST_MULTIPLIER 0.02
 
 
 /* --- Acceleration --- */

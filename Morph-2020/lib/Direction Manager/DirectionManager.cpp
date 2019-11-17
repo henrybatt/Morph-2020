@@ -7,29 +7,16 @@ DirectionManager directionManager = DirectionManager();
 DirectionManager::DirectionManager(){}
 
 
-void DirectionManager::updateData(BallData _ballData, LineData _lightData, float _heading){
+MoveData DirectionManager::update(BallData _ballData, float _heading){
     ballData = _ballData;
     heading = _heading;
-    
-    avoid.update(_lightData, ballData, heading);
-    ballData.isOut = avoid.isOutsideLine(ballData.angle);
 
-}
-
-
-BluetoothData DirectionManager::packageBluetooth(){
-    //BluetoothData(tssps.getBallData(), lightArray.getAvoidData(), roleManager.getRole(), bnoWrapper.getHeading(), coordManager.getRobotPosition())
-    return BluetoothData(ballData, avoid.getLineData(), roleManager.getRole(), heading, coordManager.getRobotPosition());
-}
-
-
-MoveData DirectionManager::update(){
     if (roleManager.getRole() == Role::attack){
-        return calculateCorrection(avoid.calculateAvoidance(calculateAttack()));
+        return calculateCorrection(calculateAvoidance(calculateAttack()));
     } else if (roleManager.getRole() == Role::defend){
-        return calculateCorrection(avoid.calculateAvoidance(calculateDefend()));
+        return calculateCorrection(calculateAvoidance(calculateDefend()));
     }
-    return calculateCorrection(avoid.calculateAvoidance(MoveData(-1, 0)));
+    return calculateCorrection(calculateAvoidance(MoveData(-1, 0)));
 }
 
 
@@ -89,6 +76,37 @@ MoveData DirectionManager::calculateDefend(){
 }
 
 
+MoveData DirectionManager::calculateAvoidance(MoveData calcMove){
+    LineData lineData = lightArray.getAvoidData(); 
+
+    float returnAngle = floatMod(lineData.angle + 180 - heading, 360);
+
+    if (!lineData.onField()){
+        // Not on the field, calculate return
+        if ((lineData.size > LINE_SIZE_BIG) || (!ballData.visible() && lineData.size > LINE_SIZE_MEDIUM)){
+            // Over other side of the line, move back across
+            return MoveData(returnAngle, (lineData.size == 3 ? AVOID_OVER_SPEED : lineData.size * AVOID_SPEED));
+
+        } else {
+            // On inside on line, calculate bounce direction
+
+            if (lineData.size > LINE_SIZE_SMALL && lightArray.isOutsideLine(calcMove.angle)){
+                // Ball is outside line, stop
+                if (lightArray.isOutsideLine(ballData.angle)){
+                    return MoveData(-1, 0);
+                } else {
+                    return calculateAvoianceBounce(calcMove, returnAngle, lineData.size);
+                }
+
+            } else if(lineData.size > LINE_SIZE_MEDIUM){
+                // Ball is inside field
+                return calculateAvoianceBounce(calcMove, returnAngle, lineData.size);
+            }
+        }
+    }
+    return calcMove;
+}
+
 
 MoveData DirectionManager::calculateCorrection(MoveData calcMove){
     if (roleManager.getRole() == Role::attack && camera.attack.face){
@@ -105,24 +123,22 @@ MoveData DirectionManager::calculateCorrection(MoveData calcMove){
 MoveData DirectionManager::calculateOrbit(){
     MoveData calcMove;
 
-    float ballAngleDifference = -findSign(ballData.angle-180) * fmin(90, 0.4 * expf(ANGLE_DIFF_MULTIPLIER * smallestAngleBetween(ballData.angle, 0)));
-    float strengthFactor = constrain(((float)ballData.strength - (float)BALL_FAR_STRENGTH) / ((float)BALL_CLOSE_STRENGTH - (float)BALL_FAR_STRENGTH), 0, 1);
-    float distanceMultiplier = constrain((DIST_MULTIPLIER * strengthFactor * expf(4.5 * strengthFactor)), 0, 1);
-    float angleAddition = ballAngleDifference * distanceMultiplier;
-
-    calcMove.angle = floatMod(ballData.angle + angleAddition, 360);
+    calcMove.angle = floatMod(ballData.angle + tssps.calculateAngleAddition(), 360);
 
     //If ball infront of capture zone, surge forwards fast, else move at a modular speed
     if (ballData.strength > ATTACK_SURGE_STRENGTH && angleIsInside(360 - ATTACK_CAPTURE_ANGLE, ATTACK_CAPTURE_ANGLE, ballData.angle)){
         calcMove.speed = ORBIT_SURGE_SPEED;
         ballManager.attackKick();
+
     } else {
-        calcMove.speed = ORBIT_SLOW_SPEED + (ORBIT_FAST_SPEED - ORBIT_SLOW_SPEED) * (1.0 - abs(angleAddition) / 90.0);
+        calcMove.speed = ORBIT_SLOW_SPEED + (ORBIT_FAST_SPEED - ORBIT_SLOW_SPEED) * (1.0 - abs(tssps.getAngleAddition()) / 90.0);
     }
 
     #if DEBUG_ORBIT
-        Serial.printf("Orbit Data:\tAngle: %i,\t Speed: %i,\t Angle Addition: %f \n", calcMove.angle, calcMove.speed, angleAddition);
+        Serial.printf("Orbit Data:\tAngle: %i,\t Speed: %i,\t Angle Addition: %f \n", calcMove.angle, calcMove.speed, tssps.getAngleAddition());
     #endif
+
+
 
     return calcMove;
 }
@@ -138,4 +154,26 @@ MoveData DirectionManager::calculateOtherOrbit(){
 
 }
 
+
+MoveData DirectionManager::calculateAvoianceBounce(MoveData calcMove, float returnAngle, float lineSize){
+
+    if (smallestAngleBetween(calcMove.angle, returnAngle) < AVOID_BOUNCE_ANGLE){
+    // If ball is within boucing angles decide if to move direct or bounce
+        if (smallestAngleBetween(calcMove.angle, returnAngle) < AVOID_NORMAL_ANGLE){
+            // Withing direct return angle
+            return calcMove;
+        }else{
+            // Bounce towards ball
+            return MoveData(calculateAvoianceBounceAngle(calcMove.angle, returnAngle), lineSize * AVOID_BOUNCE_SPEED);
+        }
+    }
+    return calcMove;
+
+}
+
+
+float DirectionManager::calculateAvoianceBounceAngle(float orbitAngle, float lineAngle){
+    return ((floatMod(lineAngle + 180 - orbitAngle, 360)) > 0 && (floatMod(lineAngle + 180 - orbitAngle, 360)) < 180) 
+                ? floatMod(lineAngle + 60, 360) : floatMod(lineAngle - 60, 360);
+}
 

@@ -21,11 +21,9 @@ void setup() {}
 void loop() {
     // Update data
     bnoWrapper.update();
-
-    // Slave Data
     lightArray.update(bnoWrapper.getHeading());
+    lightArray.calculateAvoidanceData(lightArray.getLineData());
     tssps.update();
-
 
     #if CAMERA
         // Read camera data & calculate coordinates
@@ -33,17 +31,13 @@ void loop() {
         coordManager.update(bnoWrapper.getHeading());
     #endif
 
-    directionManager.updateData(tssps.getBallData(), lightArray.getLineData(), bnoWrapper.getHeading()) ;
-
-
     if (BTSendTimer.timeHasPassed() && SWITCHING) {
         // Send bluetooth data and decide new role
-        bluetooth.update(directionManager.packageBluetooth());
+        bluetooth.update(BluetoothData(tssps.getBallData(), lightArray.getAvoidData(), roleManager.getRole(), bnoWrapper.getHeading(), coordManager.getRobotPosition()));
         roleManager.update();
     }
 
-
-    motors.update(true ? directionManager.update() : MoveData(0, 0, 0));
+    motors.update(true ? directionManager.update(tssps.getBallData(), bnoWrapper.getHeading()) : MoveData(0, 0, 0));
 
     roleManager.roleLED();
 }
