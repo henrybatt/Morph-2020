@@ -25,8 +25,13 @@ void BallManager::attackKick(){
 
 
 void BallManager::kick(){
-    if (kickDischarge.timeHasPassed()){
-        digitalWriteFast(KICKER_PIN, lastKick.timeHasPassed());
+    if (kickerCharge.timeHasPassedNoUpdate()){
+        if (lastKick.timeHasPassed()){
+            digitalWriteFast(KICKER_PIN, HIGH);
+            kickerCharge.update();
+        } else {
+            digitalWriteFast(KICKER_PIN, LOW);
+        }
     }
 }
 
