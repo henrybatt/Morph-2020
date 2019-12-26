@@ -43,7 +43,7 @@ bool CoordinateManager::moveToCoord(MoveData *calcMove, Vector target){
 
 
 MoveData CoordinateManager::moveToCoord(Vector target){
-    if (camera.goalVisible()){
+    if (camera.goalVisible() && newCoordUpdate()){
         return moveByDifference(target - robotPosition);
     } else {
         return MoveData(-1, 0);

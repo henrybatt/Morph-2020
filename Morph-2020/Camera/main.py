@@ -7,7 +7,7 @@ ATTACK_YELLOW = True
 ROBOT = 1   # 1=A, 0=B
 
 DEBUG_WHITEBAL = False
-DEBUGGING = True
+DEBUGGING = False
 
 
 ## ======================= BLOB Finder =======================
@@ -32,9 +32,9 @@ class Find():
         # - Camera Specific Values - #
         if robot:
             self.thresholds = [
-            (14, 59, 36, 83, 15, 68),   #Yellow Goal
+            (64, 99, -78, 31, 55, 96),   #Yellow Goal
             (11, 50, -60, -11, -7, 34)]   #Blue Goal
-            self.whitebal = (-6.02073, -4.878651, -0.06828868)
+            self.whitebal = (-6.157801, -6.02073, -0.931115)
             self.window = (20, 0, 120, 120)
             self.MAX_RAD = 70
             self.CENTREX = 60
@@ -65,8 +65,9 @@ class Find():
             sensor.set_contrast(3)
             sensor.set_saturation(2)
 
-            sensor.set_auto_exposure(False, exposure_us=10000)#sensor.get_exposure_us())
-            sensor.set_auto_gain(False, gain_db=15)#sensor.get_gain_db())
+            sensor.set_auto_whitebal(False, rgb_gain_db=self.whitebal)
+            sensor.set_auto_exposure(False, exposure_us=10000)
+            sensor.set_auto_gain(False, gain_db=15)
             sensor.skip_frames(time=500)
 
 
@@ -157,12 +158,12 @@ class Send():
 
         # Attack Data
         sendData.append((data[0] >> 8) & 0xFF)
-        sendData.append(data[0] & 0x7F)
+        sendData.append(data[0] & 0xFF)
         sendData.append(data[1])
 
         # Defend Data
         sendData.append((data[2] >> 8) & 0xFF)
-        sendData.append(data[2] & 0x7F)
+        sendData.append(data[2] & 0xF)
         sendData.append(data[3])
 
         # - Ensure no data is the same as starting byte - #
@@ -174,7 +175,7 @@ class Send():
             self.uart.writechar(d)
 
 
-        #print(', '.join(map(str, data)))
+        print(', '.join(map(str, data)))
         #print(', '.join(map(str, sendData)))
 
 
@@ -192,6 +193,7 @@ finder.init(ROBOT, ATTACK_YELLOW, DEBUGGING, DEBUG_WHITEBAL)
 LED(1).off()
 
 while(True):
+
     clock.tick()
     if DEBUG_WHITEBAL:
         finder.whiteBal()

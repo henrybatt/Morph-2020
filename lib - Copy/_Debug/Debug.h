@@ -2,7 +2,7 @@
 #define DEBUG_H
 
 #define DEBUG_ORBIT 0
-#define DEBUG_IMU 1
+#define DEBUG_IMU 0
 #define DEBUG_TSSP 0
 #define DEBUG_BALL_DATA 0
 #define DEBUG_LIGHT 0

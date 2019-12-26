@@ -83,25 +83,19 @@ MoveData DirectionManager::calculateAvoidance(MoveData calcMove){
 
     if (!lineData.onField()){
         // Not on the field, calculate return
-        if ((lineData.size > LINE_SIZE_BIG) || (!ballData.visible() && lineData.size > LINE_SIZE_MEDIUM)){
+        if ((lineData.size > LINE_SIZE_BIG)){
             // Over other side of the line, move back across
             return MoveData(returnAngle, (lineData.size == 3 ? AVOID_OVER_SPEED : lineData.size * AVOID_SPEED));
 
-        } else {
-            // On inside on line, calculate bounce direction
+        } else if (lineData.size > LINE_SIZE_SMALL){
+            
+            if (lightArray.isOutsideLine(ballData.angle) && lightArray.isOutsideLine(calcMove.angle)){
+                return MoveData(-1, 0);
 
-            if (lineData.size > LINE_SIZE_SMALL && lightArray.isOutsideLine(calcMove.angle)){
-                // Ball is outside line, stop
-                if (lightArray.isOutsideLine(ballData.angle)){
-                    return MoveData(-1, 0);
-                } else {
-                    return calculateAvoianceBounce(calcMove, returnAngle, lineData.size);
-                }
-
-            } else if(lineData.size > LINE_SIZE_MEDIUM){
-                // Ball is inside field
+            } else if (lineData.size > LINE_SIZE_MEDIUM){
                 return calculateAvoianceBounce(calcMove, returnAngle, lineData.size);
             }
+
         }
     }
     return calcMove;

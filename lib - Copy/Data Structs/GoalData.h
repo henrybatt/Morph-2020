@@ -1,22 +1,20 @@
 #ifndef GOALDATA_H
 #define GOALDATA_H
 
-#include <Arduino.h>
 #include <Common.h>
 
 class GoalData{
 
     public: 
         uint16_t angle;
-        uint8_t distance;
-        bool face;
+        uint16_t distance;
 
         GoalData(){
-            angle = -1;
-            distance = -1;
+            angle = 65535;
+            distance = 65535;
         }
 
-        GoalData(uint16_t angle, uint8_t distance) : angle(angle), distance(distance) {}
+        GoalData(uint16_t angle, uint16_t distance) : angle(angle), distance(distance) {}
 
         /* -- Goal is visible -- */
         bool visible(){

@@ -12,6 +12,12 @@
 #define MPU_OVERRIDE true
 
 
+/* --- I2C --- */
+#define SLAVE_ADDR 4//0x66
+#define SLAVE_PACKET_SIZE 8
+#define MASTER_PACKET_SIZE 5
+
+
 /* --- Orbit --- */
 #define ORBIT_SURGE_SPEED 80
 #define ORBIT_FAST_SPEED 60 // Vertical movement of orbit
@@ -61,8 +67,8 @@
 
 /* --- Kicker --- */
 #define KICKER_GOAL_ANGLE 30
-#define KICKER_DISCHARGE_TIME 1000000
-#define KICKER_LAST_TIMER 1000000
+#define KICKER_DISCHARGE_TIME 1000
+#define KICKER_LAST_TIMER 1000
 #define KICKER_PIN 0
 #define LIGHTGATE_PIN 0
 #define LIGHTGATE_THRESHOLD 0 
@@ -94,7 +100,7 @@
 
 
 /* --- TSSPs --- */
-#define TSSP_NO_BALL_ANGLE -1
+#define TSSP_NO_BALL_ANGLE 65535
 #define TSSP_NO_BALL_STRENGTH 0
 #define TSSP_NUM 18
 #define TSSP_NUM_MULTIPLIER 20 //360 / LS_NUM
@@ -127,9 +133,10 @@
 
 
 /* --- Role LED Timers --- */
-#define ATTACK_LED 500000
-#define DEFEND_LED 1000000
-#define UNDECIDED_LED 200000
+#define ATTACK_LED 500
+#define DEFEND_LED 1000
+#define UNDECIDED_LED 200
+#define SLAVE_LED 2500
 
 
 /* --- MPU Sensor --- */
@@ -166,7 +173,7 @@
 #define BALL_OUT_COORD_X 0
 #define BALL_OUT_COORD_Y -30
 
-#define NEW_COORD_TIMER 250000
+#define NEW_COORD_TIMER 250
 
 
 /* --- Screen --- */

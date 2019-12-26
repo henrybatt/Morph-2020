@@ -15,15 +15,15 @@ void Camera::read(){
     if (cameraSerial.available() >= CAM_PACKET_SIZE){
         if (cameraSerial.read() == CAM_START_BYTE && cameraSerial.peek() == CAM_START_BYTE){
             newCamData = true;
-            cameraSerial.read();
             uint8_t camBuffer[CAM_PACKET_SIZE - 2];
+            cameraSerial.read();
 
             for (uint8_t i = 0; i < CAM_PACKET_SIZE - 2; i++){
                 camBuffer[i] = cameraSerial.read();
             }
             
-            attack = GoalData(camBuffer[0] << 8 | camBuffer[1], camBuffer[2]);
-            defend = GoalData(mod((camBuffer[3] << 8 | camBuffer[4]), 360), camBuffer[5]);
+            attack = GoalData((camBuffer[0] << 8 | camBuffer[1]), camBuffer[2]);
+            defend = GoalData((camBuffer[3] << 8 | camBuffer[4]), camBuffer[5]);
 
         }
     }
