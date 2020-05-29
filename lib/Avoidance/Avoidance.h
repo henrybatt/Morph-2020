@@ -5,6 +5,7 @@
 
 #include <MoveData.h>
 #include <LineData.h>
+#include <BallData.h>
 
 
 class Avoidance{
@@ -14,13 +15,18 @@ class Avoidance{
         /* -- Constructor -- */
         Avoidance();
 
+        void data(BallData _ballData, LineData _lineData);
+
         /* --  -- */
-        MoveData update(MoveData calcMove, LineData lineData, uint16_t ballAngle, float heading);
+        MoveData update(MoveData calcMove, float heading);
 
         /* -- return if angle is inside the field -- */
         bool isOutsideLine(float angle, float heading);
 
     private:
+
+        LineData lineData = LineData();
+        BallData ballData = BallData();
 
         LineData avoidData = LineData();
 

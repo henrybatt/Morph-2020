@@ -71,4 +71,32 @@
 #define LS_31 30
 #define LS_32 31
 
+
+/* --- Motors --- */
+
+// Front Right
+#define MOTOR_FRONT_RIGHT_ENA 37
+#define MOTOR_FRONT_RIGHT_IN1 35
+#define MOTOR_FRONT_RIGHT_IN2 36
+#define MOTOR_FRONT_RIGHT_ANGLE 45
+
+// Back Right
+#define MOTOR_BACK_RIGHT_ENA 23
+#define MOTOR_BACK_RIGHT_IN1 21
+#define MOTOR_BACK_RIGHT_IN2 22
+#define MOTOR_BACK_RIGHT_ANGLE 135
+
+// Back Left
+#define MOTOR_BACK_LEFT_ENA 4
+#define MOTOR_BACK_LEFT_IN1 5
+#define MOTOR_BACK_LEFT_IN2 6
+#define MOTOR_BACK_LEFT_ANGLE 225
+
+// Front Left
+#define MOTOR_FRONT_LEFT_ENA 29
+#define MOTOR_FRONT_LEFT_IN1 27
+#define MOTOR_FRONT_LEFT_IN2 28
+#define MOTOR_FRONT_LEFT_ANGLE 315
+
+
 #endif

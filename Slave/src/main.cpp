@@ -4,36 +4,37 @@
 #include <LightArray.h>
 
 #include <Timer.h>
+#include <LED.h>
 
 
-Timer updateTimer = Timer(TSSP_PERIOD_NUM * TSSP_PERIOD_TIME);
+TimerM updateTimer = TimerM(TSSP_PERIOD_NUM * TSSP_PERIOD_TIME);
+LED slaveLED = LED(LED_BUILTIN, SLAVE_LED_DURATION);
 
 void send(){
 
-
-    // Write both starting bytes
-    SLAVE_SERIAL.write(SLAVE_START_BYTE);
-    SLAVE_SERIAL.write(SLAVE_START_BYTE);
+    // Write starting bytes
+    MASTER_SERIAL.write(SLAVE_START_BYTE);
+    MASTER_SERIAL.write(SLAVE_START_BYTE);
 
     // Write ball angle
-    SLAVE_SERIAL.write(highByte((uint16_t)tssps.getAngle()));
-    SLAVE_SERIAL.write(lowByte((uint16_t)tssps.getAngle()));
+    MASTER_SERIAL.write(highByte((uint16_t)tssps.getAngle()));
+    MASTER_SERIAL.write(lowByte((uint16_t)tssps.getAngle()));
 
     // Write ball strength
-    SLAVE_SERIAL.write(highByte((uint16_t)tssps.getStrength()));
-    SLAVE_SERIAL.write(lowByte((uint16_t)tssps.getStrength()));
+    MASTER_SERIAL.write(highByte((uint16_t)tssps.getStrength()));
+    MASTER_SERIAL.write(lowByte((uint16_t)tssps.getStrength()));
 
     // Write line angle
-    SLAVE_SERIAL.write(highByte((uint16_t)lightArray.getAngle()));
-    SLAVE_SERIAL.write(lowByte((uint16_t)lightArray.getAngle()));
+    MASTER_SERIAL.write(highByte((uint16_t)lightArray.getAngle()));
+    MASTER_SERIAL.write(lowByte((uint16_t)lightArray.getAngle()));
 
     // Write line strength * 100 (remove decimal)
-    SLAVE_SERIAL.write(highByte((uint16_t)lightArray.getSize() * 100));
-    SLAVE_SERIAL.write(lowByte((uint16_t)lightArray.getSize() * 100));
+    MASTER_SERIAL.write(highByte((uint16_t)lightArray.getSize() * 100));
+    MASTER_SERIAL.write(lowByte((uint16_t)lightArray.getSize() * 100));
 }
 
 
-void setup() { SLAVE_SERIAL.begin(TEENSY_BAUD); }
+void setup() { MASTER_SERIAL.begin(TEENSY_BAUD); }
 
 
 void loop() {
@@ -49,7 +50,12 @@ void loop() {
 
     }
 
+    slaveLED.update();
+
 }
+
+
+
 
 /* --  -- */
 

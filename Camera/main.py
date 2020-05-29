@@ -17,7 +17,8 @@ from math import atan2, sqrt, degrees
 class Find():
 
     def __init__(self):
-        self.NO_DATA = -1
+        self.NO_DATA_ANGLE = -1
+        self.NO_DATA_DIST = 0
         self.debugCount = 0
         self.DEBUG_COUNT_MAX = 30
 
@@ -104,7 +105,7 @@ class Find():
                         self.img.draw_rectangle(blob.rect())
                         self.img.draw_line((self.CENTREX, self.CENTREY, blob.cx(), blob.cy()),thickness=1)
                     return(angle, distance)
-        return(self.NO_DATA, self.NO_DATA)
+        return(self.NO_DATA_ANGLE, self.NO_DATA_DIST)
 
 
     def findBlobs(self):

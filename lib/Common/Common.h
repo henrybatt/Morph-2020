@@ -39,8 +39,6 @@ void insertionSort(int *a, int n);
 void insertionSortRev(int *a, int n);
 
 
-
-
 #define ARRAYSHIFTDOWN(a, lower, upper){          \
     if (upper == (sizeof(a)/sizeof(a[0])) - 1){   \
         for (int q = upper - 1; q >= lower; q--){ \

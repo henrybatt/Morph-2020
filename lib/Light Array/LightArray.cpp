@@ -48,12 +48,12 @@ void LightArray::update(){
     numClusters = 0;
     findClusterStart = true;
 
-    for (int i = 0; i < 4; i++){
+    for (uint8_t i = 0; i < 4; i++){
         starts[i] = -1;
         ends[i] = -1;
     }
 
-    for (int i = 0; i < LS_NUM; i++){ // Loop through ls' to find clusters
+    for (uint8_t i = 0; i < LS_NUM; i++){ // Loop through ls' to find clusters
         if (findClusterStart){ //Find first cluster value
             if (onWhite[i]){ 
                 findClusterStart = false;
@@ -88,11 +88,11 @@ void LightArray::update(){
 
         if (numClusters == 1){
             lineData.angle = cluster1Angle;
-            lineData.size =  1 - cos(toRadians(angleBetween(starts[0] * LS_NUM_MULTIPLIER, ends[0] * LS_NUM_MULTIPLIER) / 2.0));
+            lineData.size =  1 - cosf(toRadians(angleBetween(starts[0] * LS_NUM_MULTIPLIER, ends[0] * LS_NUM_MULTIPLIER) / 2.0f));
 
-        } else if (numClusters ==2){
+        } else if (numClusters == 2){
             lineData.angle = angleBetween(cluster1Angle, cluster2Angle) <= 180 ? midAngleBetween(cluster1Angle, cluster2Angle) : midAngleBetween(cluster2Angle, cluster1Angle);
-            lineData.size =  1 - cos(toRadians(angleBetween(cluster1Angle, cluster2Angle) <= 180 ? angleBetween(cluster1Angle, cluster2Angle) / 2.0 : angleBetween(cluster2Angle, cluster1Angle) / 2.0));
+            lineData.size =  1 - cosf(toRadians(angleBetween(cluster1Angle, cluster2Angle) <= 180 ? angleBetween(cluster1Angle, cluster2Angle) / 2.0f : angleBetween(cluster2Angle, cluster1Angle) / 2.0f));
 
         } else {
             float angleDiff12 = angleBetween(cluster1Angle, cluster2Angle);
@@ -101,13 +101,13 @@ void LightArray::update(){
             float biggestAngle = max(angleDiff12, max(angleDiff23, angleDiff31));
             if (biggestAngle == angleDiff12){
                 lineData.angle = midAngleBetween(cluster2Angle, cluster1Angle);
-                lineData.size =  angleBetween(cluster2Angle, cluster1Angle) <= 180 ? 1 - cos(toRadians(angleBetween(cluster2Angle, cluster1Angle) / 2.0)) : 1;
+                lineData.size =  angleBetween(cluster2Angle, cluster1Angle) <= 180 ? 1 - cosf(toRadians(angleBetween(cluster2Angle, cluster1Angle) / 2.0f)) : 1;
             } else if (biggestAngle == angleDiff23){
                 lineData.angle = midAngleBetween(cluster3Angle, cluster2Angle);
-                lineData.size =  angleBetween(cluster3Angle, cluster2Angle) <= 180 ? 1 - cos(toRadians(angleBetween(cluster3Angle, cluster2Angle) / 2.0)) : 1;
+                lineData.size =  angleBetween(cluster3Angle, cluster2Angle) <= 180 ? 1 - cosf(toRadians(angleBetween(cluster3Angle, cluster2Angle) / 2.0f)) : 1;
             } else {
                 lineData.angle = midAngleBetween(cluster1Angle, cluster3Angle);
-                lineData.size =  angleBetween(cluster1Angle, cluster3Angle) <= 180 ? 1 - cos(toRadians(angleBetween(cluster1Angle, cluster3Angle) / 2.0)) : 1;
+                lineData.size =  angleBetween(cluster1Angle, cluster3Angle) <= 180 ? 1 - cosf(toRadians(angleBetween(cluster1Angle, cluster3Angle) / 2.0f)) : 1;
             }
         }
     } else {
@@ -146,7 +146,7 @@ void LightArray::calibrate(){
         for (uint8_t j = 0; j < LS_CALIBRATION_COUNT; j++) {
             calibrateValue += readSensor(i);
         }
-        threshold[i] = round((calibrateValue / LS_CALIBRATION_COUNT) + LS_CALIBRATION_BUFFER);
+        threshold[i] = roundf((calibrateValue / LS_CALIBRATION_COUNT) + LS_CALIBRATION_BUFFER);
     }
 }
 

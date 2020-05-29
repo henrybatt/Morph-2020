@@ -2,7 +2,7 @@
 
 
 Vector::Vector(){
-    getPolar(NO_VECTOR, NO_VECTOR);
+    getCartesian(0, 0);
 }
 
 

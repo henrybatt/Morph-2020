@@ -1,15 +1,18 @@
 #include "Timer.h"
 
+
+/* -- Millisecond Timer Class -- */
+
 Timer::Timer(unsigned long duration) {
     timerDuration = duration;
 }
 
 void Timer::update() {
-    lastUpdate = micros();
+    lastUpdate = millis();
 }
 
 bool Timer::timeHasPassed() {
-    if (micros() - lastUpdate > timerDuration) {
+    if (millis() - lastUpdate > timerDuration) {
         update();
         return true;
     }
@@ -18,9 +21,37 @@ bool Timer::timeHasPassed() {
 }
 
 bool Timer::timeHasPassedNoUpdate() {
-    return micros() - lastUpdate > timerDuration;
+    return millis() - lastUpdate > timerDuration;
 }
 
 void Timer::resetTime() {
+    lastUpdate = millis();
+}
+
+
+
+/* -- Microsecond Timer Class -- */
+TimerM::TimerM(unsigned long duration) {
+    timerDuration = duration;
+}
+
+void TimerM::update() {
+    lastUpdate = micros();
+}
+
+bool TimerM::timeHasPassed() {
+    if (micros() - lastUpdate > timerDuration) {
+        update();
+        return true;
+    }
+
+    return false;
+}
+
+bool TimerM::timeHasPassedNoUpdate() {
+    return micros() - lastUpdate > timerDuration;
+}
+
+void TimerM::resetTime() {
     lastUpdate = micros();
 }

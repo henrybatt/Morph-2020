@@ -7,7 +7,7 @@ class Vector {
 
     public:
 
-        /* -- Initalise 127,127 vector (No Position Values) -- */
+        /* -- Initalise 0,0 vector -- */
         Vector();
 
         /* -- I & J or Arg & Mag -- */
@@ -18,7 +18,6 @@ class Vector {
 
         /* -- Vector is between two angles -- */
         bool between(float leftAngle, float rightAngle);
-
 
         float i, j;
         float arg, mag;

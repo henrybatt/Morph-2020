@@ -54,7 +54,7 @@ float angleBetween(float angleCounterClockwise, float angleClockwise){
 
 float smallestAngleBetween(float angleCounterClockwise, float angleClockwise){
     float ang = angleBetween(angleCounterClockwise, angleClockwise);
-    return fmin(ang, 360 - ang);
+    return fminf(ang, 360 - ang);
 }
 
 

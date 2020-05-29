@@ -8,9 +8,9 @@ TSSPArray::TSSPArray(){
     }
 
     if (ROBOT) {
-        for (uint8_t i = 0; i < TSSP_NUM; i++) tsspAddition[i] = tsspAddition1[i];
+        for (uint8_t i = 0; i < TSSP_NUM; i++) {tsspAddition[i] = tsspAddition1[i];}
     } else {
-        for (uint8_t i = 0; i < TSSP_NUM; i++) tsspAddition[i] = tsspAddition0[i];
+        for (uint8_t i = 0; i < TSSP_NUM; i++) {tsspAddition[i] = tsspAddition0[i];}
     }
 
 
@@ -64,16 +64,16 @@ void TSSPArray::update(){
         }
     }
 
-    int16_t x = 0;
-    int16_t y = 0;
+    float x = 0;
+    float y = 0;
 
     for (uint8_t i = 0; i < TSSP_NUM_CAL; i++) {
-        x += sortedValues[i] * cos(toRadians(indexes[i] * TSSP_NUM_MULTIPLIER));
-        y += sortedValues[i] * sin(toRadians(indexes[i] * TSSP_NUM_MULTIPLIER));
+        x += sortedValues[i] * cosf(toRadians(indexes[i] * TSSP_NUM_MULTIPLIER));
+        y += sortedValues[i] * sinf(toRadians(indexes[i] * TSSP_NUM_MULTIPLIER));
     }
 
     data.strength = sqrtf(powf(x, 2) + powf(y, 2));
-    data.angle = data.strength != 0 ? floatMod(toDegrees(atan2(y, x)), 360) : TSSP_NO_BALL_ANGLE;
+    data.angle = data.strength != 0 ? floatMod(toDegrees(atan2f(y, x)), 360.0f) : TSSP_NO_BALL_ANGLE;
 
     #if DEBUG_BALL_DATA
         Serial.printf("Ball Data:\tAngle: %i,\t Strength: %i \n", data.angle, data.strength);

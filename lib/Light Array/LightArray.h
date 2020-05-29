@@ -38,8 +38,8 @@ class LightArray{
         uint16_t readValue[LS_NUM] = {0}; // Values read from each sensor
         bool onWhite[LS_NUM] = {0}; // If light sensor see white. If reading > threshold
 
-        int starts[4]; // Array of cluster start indexes
-        int ends[4];   // Array of cluster end indexes
+        int8_t starts[4]; // Array of cluster start indexes
+        int8_t ends[4];   // Array of cluster end indexes
 
         uint8_t numClusters = 0;   // Number of clusters found
         bool findClusterStart; // If cluster has begun
