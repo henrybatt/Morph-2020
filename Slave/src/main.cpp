@@ -8,7 +8,6 @@
 
 
 TimerM updateTimer = TimerM(TSSP_PERIOD_NUM * TSSP_PERIOD_TIME);
-LED slaveLED = LED(LED_BUILTIN, SLAVE_LED_DURATION);
 
 void send(){
 
@@ -49,8 +48,6 @@ void loop() {
         send();
 
     }
-
-    slaveLED.update();
 
 }
 

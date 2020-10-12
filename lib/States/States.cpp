@@ -40,8 +40,8 @@ Kick::Kick() {
 }
 
 void Kick::update() {
-    kickerTimer->Resume();
     canKick = false;
+    kickerTimer->Resume();
 
     // Insert kicker code
 }
