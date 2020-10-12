@@ -4,18 +4,25 @@ LightArray lightArray = LightArray();
 
 
 LightArray::LightArray(){
-    for (uint8_t i = 0; i < 5; i++) {
-        pinMode(controller[i], OUTPUT);
+    // for (uint8_t i = 0; i < 5; i++) {
+    //     pinMode(controller[i], OUTPUT);
+    // }
+    // pinMode(LS_MUX_OUT, INPUT);
+    for (int i = 0; i < 4; i++) {
+        pinMode(controller1[i], OUTPUT);
+        pinMode(controller2[i], OUTPUT);
     }
-    pinMode(LS_MUX_OUT, INPUT);
+    pinMode(MUX_A_OUT, INPUT);
+    pinMode(MUX_B_OUT, INPUT);
+
     calibrate();
 }
 
 /* - Public - */
 
 void LightArray::update(){
-
     /* - Update sensors - */
+
     // Read Sensors and update onWhite state
     for (uint8_t i = 0; i < LS_NUM; i++){
         onWhite[i] = readSensor(i) > threshold[i];
@@ -45,20 +52,18 @@ void LightArray::update(){
     /* - Clusters - */
 
     // Reset Values
-    numClusters = 0;
-    findClusterStart = true;
+    int8_t starts[4] = {-1, -1, -1, -1};
+    int8_t ends[4] = {-1, -1, -1, -1};
 
-    for (uint8_t i = 0; i < 4; i++){
-        starts[i] = -1;
-        ends[i] = -1;
-    }
+    uint8_t numClusters = 0;
+    bool findClusterStart = true;
 
     for (uint8_t i = 0; i < LS_NUM; i++){ // Loop through ls' to find clusters
         if (findClusterStart){ //Find first cluster value
-            if (onWhite[i]){ 
+            if (onWhite[i]){
                 findClusterStart = false;
                 starts[numClusters] = i;
-                numClusters += 1;
+                numClusters++;
             }
         } else { //Found start of cluster, find how many sensors
             if (!onWhite[i]){ // Cluster ended 1 ls ago
@@ -67,10 +72,12 @@ void LightArray::update(){
             }
         }
     }
-     //If final light sensor sees white end cluster before, on last ls
+
+     //If final light sensor sees white end cluster before, end last cluster
     if (onWhite[LS_NUM - 1]){
         ends[numClusters - 1] = LS_NUM -1;
     }
+    
      // If first and last light sensor see line, merge both clusters together
     if (onWhite[0] && onWhite[LS_NUM - 1]){
         starts[0] = starts[numClusters - 1];
@@ -80,7 +87,6 @@ void LightArray::update(){
     }
 
     /* - Calculate line - */
-
     if (numClusters > 0){
         float cluster1Angle = midAngleBetween(starts[0] * LS_NUM_MULTIPLIER, ends[0] * LS_NUM_MULTIPLIER);
         float cluster2Angle = midAngleBetween(starts[1] * LS_NUM_MULTIPLIER, ends[1] * LS_NUM_MULTIPLIER);
@@ -98,7 +104,7 @@ void LightArray::update(){
             float angleDiff12 = angleBetween(cluster1Angle, cluster2Angle);
             float angleDiff23 = angleBetween(cluster2Angle, cluster3Angle);
             float angleDiff31 = angleBetween(cluster3Angle, cluster1Angle);
-            float biggestAngle = max(angleDiff12, max(angleDiff23, angleDiff31));
+            float biggestAngle = fmaxf(angleDiff12, fmaxf(angleDiff23, angleDiff31));
             if (biggestAngle == angleDiff12){
                 lineData.angle = midAngleBetween(cluster2Angle, cluster1Angle);
                 lineData.size =  angleBetween(cluster2Angle, cluster1Angle) <= 180 ? 1 - cosf(toRadians(angleBetween(cluster2Angle, cluster1Angle) / 2.0f)) : 1;
@@ -116,9 +122,8 @@ void LightArray::update(){
     }
 
     #if DEBUG_LINE
-        Serial.printf("Line lineData:\tAngle: %i,\tSize: %f \n", lineData.angle, lineData.size);
+        Serial.printf("Line lineData:\tAngle: %f,\tSize: %f \n", lineData.angle, lineData.size);
     #endif
-
 }
 
 
@@ -152,10 +157,18 @@ void LightArray::calibrate(){
 
 
 uint16_t LightArray::readSensor(uint8_t index) {
-    for (uint8_t i = 0; i < 5; i++){
-        digitalWriteFast(controller[i], (pins[index] >> i) & 0x1);
+    //     for (uint8_t i = 0; i < 5; i++){
+    //         digitalWriteFast(controller[i], (pins[index] >> i) & 0x1);
+    //     }
+    //     return analogRead(LS_MUX_OUT);
+    // }
+    // Read from sensor and return light value
+    int channel = pins[index];
+    bool mux1 = (channel < 16);
+    channel = mux1 ? channel : channel - 16;
+    for (int i = 0; i < 4; i++) {
+        int control = mux1 ? controller1[i] : controller2[i];
+        digitalWriteFast(control, channel >> i & 0x1);
     }
-    return analogRead(LS_MUX_OUT);
+    return (mux1 ? analogRead(MUX_A_OUT) : analogRead(MUX_B_OUT));
 }
-
-

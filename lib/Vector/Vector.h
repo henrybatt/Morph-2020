@@ -1,17 +1,17 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include <Common.h>
+// 
+
+#include "Common.h"
+
 
 class Vector {
 
     public:
 
-        /* -- Initalise 0,0 vector -- */
-        Vector();
-
         /* -- I & J or Arg & Mag -- */
-        Vector(float _x, float _y, bool cartesian = true);
+        Vector(float _x=0, float _y=0, bool cartesian=true);
 
         /* -- Vector Exists -- */
         bool exists();

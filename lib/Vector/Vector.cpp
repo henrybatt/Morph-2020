@@ -1,11 +1,6 @@
 #include "Vector.h"
 
 
-Vector::Vector(){
-    getCartesian(0, 0);
-}
-
-
 Vector::Vector(float _x, float _y, bool cartesian){
     cartesian ? getPolar(_x, _y) : getCartesian(_x, _y);
 }

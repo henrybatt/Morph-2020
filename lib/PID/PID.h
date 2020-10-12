@@ -5,12 +5,11 @@
 
 class PID {
     public:
-        PID() {}
-        PID(float p, float i, float d, float absoluteMax = 0.0);
+        PID(float p, float i, float d, float absoluteMax = 0.0f);
         float kp;
         float ki;
         float kd;
-        float update(float input, float setpoint, float modulus = 0.0);
+        float update(float input, float setpoint, float modulus = 0.0f);
     private:
         unsigned long lastTime;
         float lastError = 0;

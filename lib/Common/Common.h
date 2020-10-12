@@ -1,12 +1,15 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+
+
 #include <Arduino.h>
 #include <math.h>
 
-#include <Debug.h>
-#include <Define.h>
-#include <Pins.h>
+#include "Debug.h"
+#include "Define.h"
+#include "Pins.h"
+
 
 #define PI 3.1415926535897932384626433832795
 #define MATH_E 2.7182818284590452353602874713527
@@ -21,7 +24,7 @@ float toRadians(float deg);
 int mod(int value, int maxValue);
 float floatMod(float value, float maxValue);
 
-int findSign(float value);
+int sign(float value);
 
 bool isAngleBetween(float angle, float leftAngle, float rightAngle);
 
@@ -38,6 +41,8 @@ float angleMap(float angle, float max);
 void insertionSort(int *a, int n);
 void insertionSortRev(int *a, int n);
 
+bool lightgate_break();
+
 
 #define ARRAYSHIFTDOWN(a, lower, upper){          \
     if (upper == (sizeof(a)/sizeof(a[0])) - 1){   \
@@ -48,6 +53,16 @@ void insertionSortRev(int *a, int n);
             *(a + q + 1) = *(a + q); }}}
 
 
+#define SM_CHANGE_STATE_ATTACK(STATE) {sm.change_state(&Attack::STATE); return;}
+#define SM_CHANGE_STATE_DEFEND(STATE) {sm.change_state(&Defence::STATE); return;}
+#define SM_CHANGE_STATE_GLOBAL(STATE) {sm.change_state(&Global::STATE); return;}
+#define SM_REVERT {sm.revert_state(); return;}
+#define SM_MOTOR_BRAKE {robotState.movement.speed = 0; return;}
+
+#define CENTER_COORD {Vector(IDLE_COORD_I, IDLE_COORD_J)}
+
+
+
 // --- Structures --- //
 struct Vector3D {
   float x;
@@ -55,38 +70,5 @@ struct Vector3D {
   float z;
 };
 
-
-
-
-
-/* --- PID --- */
-
-#define IMU_KP 1
-#define IMU_KI 0
-#define IMU_KD 0.1
-#define IMU_MAX_CORRECTION 100
-
-#define ATTACK_GOAL_TRACK_KP 0
-#define ATTACK_GOAL_TRACK_KI 0
-#define ATTACK_GOAL_TRACK_KD 0
-#define ATTACK_GOAL_TRACK_MAX_CORRECTION 100
-
-#define DEFEND_GOAL_TRACK_KP 0
-#define DEFEND_GOAL_TRACK_KI 0
-#define DEFEND_GOAL_TRACK_KD 0
-#define DEFEND_GOAL_TRACK_MAX_CORRECTION 100
-
-#define I_MOVEMENT_KP 0
-#define I_MOVEMENT_KI 0
-#define I_MOVEMENT_KD 0
-
-#define J_MOVEMENT_KP 0
-#define J_MOVEMENT_KI 0
-#define J_MOVEMENT_KD 0
-
-#define TO_COORD_KP 0
-#define TO_COORD_KI 0
-#define TO_COORD_KD 0
-#define TO_COORD_MAX_SPEED 100
 
 #endif

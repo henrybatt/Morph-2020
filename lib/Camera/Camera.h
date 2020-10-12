@@ -13,16 +13,17 @@ class Camera{
         /* -- Class Constructor + Init -- */
         Camera();
 
+        /* -- Read Camera data and update angles and distances -- */
+        void update();
+
+        /* -- Return goal data types -- */
+        GoalData getAttackGoal();
+        GoalData getDefendGoal();
+
+    private:
         /* -- Structures of goal data -- */
         GoalData attack;
         GoalData defend;
-
-        /* -- Read Camera data and update angles and distances -- */
-        Vector update(float heading);
-
-    private:
-
-        Vector robotPosition = Vector();
 };
 
 extern Camera camera;

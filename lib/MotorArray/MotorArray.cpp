@@ -2,7 +2,6 @@
 
 MotorArray motors = MotorArray();
 
-
 /* -- Public -- */
 
 MotorArray::MotorArray(){
@@ -17,15 +16,12 @@ MotorArray::MotorArray(){
 void MotorArray::update(MoveData movement){
 
     #if DEBUG_MOVEMENT
-        Serial.printf("Movement Debug: \t Angle: %i \t Speed: %i \t Correction: %i \n", movement.angle, movement.speed, movement.correction);
+        Serial.printf("Movement Debug: \t Angle: %f \t Speed: %f \t Correction: %f \n", movement.angle, movement.speed, movement.correction);
     #endif
 
     float speeds[MOTOR_NUM] = {0};
 
     if (movement.speed != 0){
-        
-        if (movement.correction == NO_CORRECTION) { movement.correction = 0; } 
-
 
         #if ACCELERATION
             calculateAcceleration(&movement);
@@ -51,26 +47,28 @@ void MotorArray::update(MoveData movement){
         int16_t speed = speeds[i] * 2.55;
 
         if (speed != 0) {
-            enaWrite = fminf(225, fabsf(speed));
+            enaWrite = fminf(255, fabsf(speed));
             in1Write = speed > 0;
             in2Write = !in1Write;
         }
-
+        
         digitalWrite(in1[i], in1Write);
         digitalWrite(in2[i], in2Write);
-        digitalWrite(ena[i], enaWrite);
+        analogWrite(ena[i], enaWrite);
+
+        // Serial.print(enaWrite);
+        // Serial.print("\t");
     }
+    // Serial.println("");
 }
 
 
 /* -- Private -- */
 
 void MotorArray::calculateAcceleration(MoveData *movement){
-
     Vector optimal = Vector(movement->angle, MAX_ACCELERATION * movement->speed / 100, false);
     Vector output = currentAcceleration + optimal;
     currentAcceleration = output * (1 - MAX_ACCELERATION);
     *movement = MoveData(output.arg, output.mag * 100);
-
 }
 

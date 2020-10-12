@@ -1,4 +1,4 @@
-#include <Common.h>
+#include "Common.h"
 
 
 float toDegrees(float rad){
@@ -23,7 +23,7 @@ float floatMod(float value, float maxValue){
 }
 
 
-int findSign(float value){
+int sign(float value){
     return value >= 0 ? 1 : -1;
 }
 
@@ -108,4 +108,11 @@ void insertionSortRev(int *a, int n){
         }
         a[j] = temp;
     }
+}
+
+
+
+bool lightgate_break(){
+    return false;
+    return (analogRead(LIGHTGATE_PIN) < LIGHTGATE_THRESHOLD);
 }
